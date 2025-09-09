@@ -1,0 +1,76 @@
+// SCSS Variables for LifeSuite Theme
+// These variables can be easily modified to change the entire app's color scheme
+
+// Primary Colors
+$primary-color: #667eea;
+$primary-dark: #5a6fd8;
+$primary-light: #7c8eec;
+
+// Secondary Colors  
+$secondary-color: #764ba2;
+$secondary-dark: #6a4190;
+$secondary-light: #8359b4;
+
+// Accent Colors
+$accent-color: #ff6b6b;
+$accent-dark: #ff5252;
+$accent-light: #ff8a80;
+
+// Neutral Colors
+$background-color: #fafafa;
+$surface-color: #ffffff;
+$text-primary: #212121;
+$text-secondary: #757575;
+
+// Sidebar Colors
+$sidebar-background: #2c3e50;
+$sidebar-text: #ffffff;
+$sidebar-text-muted: #bdc3c7;
+$sidebar-hover: #34495e;
+
+// Status Colors
+$success-color: #4caf50;
+$warning-color: #ff9800;
+$error-color: #f44336;
+$info-color: #2196f3;
+
+// Gradients
+$primary-gradient: linear-gradient(135deg, #{$primary-color} 0%, #{$secondary-color} 100%);
+$auth-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+// Shadows
+$card-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+$nav-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+// CSS Custom Properties for runtime changes
+:root {
+  --primary-color: #{$primary-color};
+  --primary-dark: #{$primary-dark};
+  --primary-light: #{$primary-light};
+  
+  --secondary-color: #{$secondary-color};
+  --secondary-dark: #{$secondary-dark};
+  --secondary-light: #{$secondary-light};
+  
+  --accent-color: #{$accent-color};
+  --accent-dark: #{$accent-dark};
+  --accent-light: #{$accent-light};
+  
+  --background-color: #{$background-color};
+  --surface-color: #{$surface-color};
+  --text-primary: #{$text-primary};
+  --text-secondary: #{$text-secondary};
+  
+  --sidebar-background: #{$sidebar-background};
+  --sidebar-text: #{$sidebar-text};
+  --sidebar-text-muted: #{$sidebar-text-muted};
+  --sidebar-hover: #{$sidebar-hover};
+  
+  --success-color: #{$success-color};
+  --warning-color: #{$warning-color};
+  --error-color: #{$error-color};
+  --info-color: #{$info-color};
+  
+  --card-shadow: #{$card-shadow};
+  --nav-shadow: #{$nav-shadow};
+}

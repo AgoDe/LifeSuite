@@ -1,14 +1,16 @@
+import type { User, LoginCredentials, AuthResponse } from '~/types/auth'
+
 export const useAuth = () => {
   const { apiCall } = useApi()
   const router = useRouter()
   
-  const user = ref(null)
+  const user = ref<User | null>(null)
   const isLoggedIn = computed(() => !!user.value)
   
   // Login con tokensGuard
-  const login = async (credentials: { email: string, password: string }) => {
+  const login = async (credentials: LoginCredentials) => {
     try {
-      const response = await apiCall<{ user: any, token: string }>('auth/login', {
+      const response = await apiCall<AuthResponse>('auth/login', {
         method: 'POST',
         body: credentials,
         credentials: 'include'
@@ -35,13 +37,13 @@ export const useAuth = () => {
       console.warn('Logout API failed')
     } finally {
       user.value = null
-      await router.push('/login')
+      await router.push('/auth/login')
     }
   }
   
   const checkAuth = async () => {
     try {
-      const userData = await apiCall<any>('auth/me', {
+      const userData = await apiCall<User>('auth/me', {
         credentials: 'include'
       })
       user.value = userData

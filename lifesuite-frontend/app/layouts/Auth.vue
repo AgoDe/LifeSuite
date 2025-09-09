@@ -7,7 +7,7 @@
           <v-col cols="12" md="6" class="auth-bg d-none d-md-flex">
             <v-container class="fill-height d-flex align-center justify-center">
               <div class="text-center">
-                <v-icon size="120" color="primary">mdi-account-circle</v-icon>
+                <v-icon size="120" color="white">mdi-account-circle</v-icon>
                 <h1 class="mt-4 text-h3 font-weight-bold text-white">LifeSuite</h1>
                 <p class="mt-2 text-h6 text-white">La tua vita, organizzata</p>
               </div>
@@ -28,6 +28,6 @@
 
 <style scoped>
 .auth-bg {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--auth-gradient, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
 }
 </style>

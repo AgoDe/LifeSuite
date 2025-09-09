@@ -120,21 +120,23 @@ const passwordRules = [
 ]
 
 // Funzioni
+const { login } = useAuth()
+
 const handleLogin = async () => {
   loading.value = true
   
   try {
-    // Qui implementerai la logica di autenticazione
-    console.log('Login con:', form.value)
+    // Usa il composable di autenticazione
+    await login({
+      email: form.value.email,
+      password: form.value.password
+    })
     
-    // Simula una chiamata API
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    // Redirect dopo login successo
-    await navigateTo('/dashboard')
+    // Il redirect verrà gestito automaticamente dal composable
   } catch (error) {
     console.error('Errore durante il login:', error)
-    // Gestisci errori qui
+    // Mostra errore all'utente
+    // Potresti aggiungere un alert o notification qui
   } finally {
     loading.value = false
   }
