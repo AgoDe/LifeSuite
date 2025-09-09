@@ -25,7 +25,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         [HttpGet("user/{userId}")]
         [ProducesResponseType(typeof(List<AccountDto>), 200)]
-        public async Task<IActionResult> GetAccountsByUserId(int userId)
+        public async Task<IActionResult> GetAccountsByUserId(string userId)
         {
             var accounts = await _accountService.GetAccountsByUserIdAsync(userId);
             return Ok(accounts);
@@ -69,7 +69,7 @@ namespace BudgetManager.Api.Controllers
         // }
         [HttpGet("select-options/{userId}")]
         [ProducesResponseType(typeof(IApiResponse), 200)]
-        public async Task<IActionResult> GetSelectOptions(int userId)
+        public async Task<IActionResult> GetSelectOptions(string userId)
         {
             ApiResponse response;
             try

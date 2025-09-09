@@ -10,6 +10,6 @@ namespace BudgetManager.Data.Abstraction.Repositories
         //Task UpdateBalanceAsync(ITransactionEntity transaction);
         Task RefundBalanceAsync(Guid accountId, decimal amount, TransactionType type);
         //Task RefundBalanceAsync(ITransactionEntity transaction);
-        Task<ICollection<AccountDM>> GetListByUserId(int userId);
+        Task<ICollection<AccountDM>> GetListByUserId(string userId);
     }
 }

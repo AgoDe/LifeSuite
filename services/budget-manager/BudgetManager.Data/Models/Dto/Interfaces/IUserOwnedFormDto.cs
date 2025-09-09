@@ -7,6 +7,6 @@ namespace BudgetManager.Data.Models.Dto.Interfaces
     /// </summary>
     public interface IUserOwnedFormDto : IFormDto
     {
-        int UserId { get; set; }
+        string UserId { get; set; }
     }
 }

@@ -7,7 +7,7 @@ public class EFCategoryEntity : EFBaseEntity
     public string Color { get; set; }
     
     public Guid? ParentId { get; set; }
-    public int UserId { get; set; }
+    public string UserId { get; set; }
         
     // Proprietà concrete per Entity Framework
     public virtual EFCategoryEntity? Parent { get; set; }

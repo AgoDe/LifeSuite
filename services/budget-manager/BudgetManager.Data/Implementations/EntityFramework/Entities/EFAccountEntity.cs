@@ -7,7 +7,7 @@ public class EFAccountEntity : EFBaseEntity
     public decimal InitialBalance { get; set; }
     public decimal Balance { get; set; }
     public DateTime BalanceDate { get; set; }
-    public int UserId { get; set; }
+    public string UserId { get; set; }
         
     // Concrete navigation properties for Entity Framework
     public ICollection<EFRecurringEntity> Recurrings { get; set; } = new List<EFRecurringEntity>();

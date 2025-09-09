@@ -20,7 +20,7 @@ public class EFRecurringEntity : EFBaseEntity
     
     public Guid AccountId { get; set; }
     public Guid CategoryId { get; set; }
-    public int UserId { get; set; }
+    public string UserId { get; set; }
 
     // Proprietà concrete per Entity Framework
     public EFAccountEntity Account { get; set; } = null!;

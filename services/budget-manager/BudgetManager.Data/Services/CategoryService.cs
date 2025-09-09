@@ -20,7 +20,7 @@ public class CategoryService : BaseCrudService<CategoryDM, CategoryDto, Category
         _repositoryUOW = repositoryUow;
     }
     
-    public async Task<List<SelectOption>> GetSelectOptions(int userId)
+    public async Task<List<SelectOption>> GetSelectOptions(string userId)
     {
         var categories = await _repository.GetListAsync(new CategoryFilter { UserId = userId });
 

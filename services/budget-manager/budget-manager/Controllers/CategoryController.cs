@@ -18,7 +18,7 @@ public class CategoryController : CrudController<CategoryDto, CategoryFormDto, C
     }
     
     [HttpGet("select-options/{userId}")]
-    public async Task<IActionResult> GetSelectOptions(int userId)
+    public async Task<IActionResult> GetSelectOptions(string userId)
     {
         ApiResponse response;
         try

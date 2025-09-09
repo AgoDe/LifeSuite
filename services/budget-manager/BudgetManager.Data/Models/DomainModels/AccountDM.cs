@@ -10,6 +10,6 @@ public class AccountDM : BaseDomainModel
     public decimal InitialBalance { get; set; }
     public decimal Balance { get; set; }
     public DateTime BalanceDate { get; set; }
-    public int UserId { get; set; }
+    public string UserId { get; set; }
     
 }

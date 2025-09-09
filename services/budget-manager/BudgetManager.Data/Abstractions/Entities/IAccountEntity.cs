@@ -7,6 +7,6 @@
         decimal InitialBalance { get; set; }
         decimal Balance { get; set; }
         DateTime BalanceDate { get; set; }
-        int UserId { get; set; }
+        string UserId { get; set; }
     }
 }
