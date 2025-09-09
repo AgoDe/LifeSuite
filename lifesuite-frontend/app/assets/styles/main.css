@@ -1,4 +1,5 @@
 /* Main CSS file per LifeSuite */
+@import './variables.scss';
 
 /* Reset e stili globali */
 * {
@@ -12,6 +13,8 @@ html {
 body {
   font-family: 'Roboto', sans-serif;
   line-height: 1.6;
+  background-color: var(--background-color);
+  color: var(--text-primary);
 }
 
 /* Utilities */
@@ -30,6 +33,20 @@ body {
   opacity: 0;
 }
 
+/* Slide transitions for mobile sidebar */
+.slide-x-enter-active,
+.slide-x-leave-active {
+  transition: transform 0.3s ease;
+}
+
+.slide-x-enter-from {
+  transform: translateX(-100%);
+}
+
+.slide-x-leave-to {
+  transform: translateX(-100%);
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -46,4 +63,26 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
+}
+
+/* Layout specific styles */
+.app-sidebar {
+  background-color: var(--sidebar-background) !important;
+  color: var(--sidebar-text) !important;
+}
+
+.app-sidebar .v-list-item {
+  color: var(--sidebar-text) !important;
+}
+
+.app-sidebar .v-list-item:hover {
+  background-color: var(--sidebar-hover) !important;
+}
+
+.app-sidebar .v-list-item--active {
+  background-color: var(--primary-color) !important;
+}
+
+.auth-bg {
+  background: var(--auth-gradient, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
 }
