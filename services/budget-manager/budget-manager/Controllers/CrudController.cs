@@ -7,6 +7,7 @@ using BudgetManager.Api.Models.Interfaces;
 using BudgetManager.Api.Models;
 using BudgetManager.Data.Abstraction.Models.Dto;
 using System.Net;
+using budget_manager.Filters;
 
 namespace BudgetManager.Api.Controllers
 {
@@ -17,6 +18,7 @@ namespace BudgetManager.Api.Controllers
     /// <typeparam name="TFormDto">Tipo del DTO per operazioni di creazione/modifica</typeparam>
     /// <typeparam name="TFilter">Tipo del filtro per le query di lista</typeparam>
     [ApiController]
+    [AutoSetUserId]
     [Route("api/[controller]")]
     public abstract class CrudController<TDto, TFormDto, TFilter> : ControllerBase
         where TDto : class, IBaseDto

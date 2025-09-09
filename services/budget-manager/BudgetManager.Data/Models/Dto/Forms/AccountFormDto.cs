@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using BudgetManager.Data.Abstraction.Models.Dto;
+using BudgetManager.Data.Models.Dto.Interfaces;
 
 namespace BudgetManager.Data.Models.Dto.Forms
 {
@@ -9,6 +10,7 @@ namespace BudgetManager.Data.Models.Dto.Forms
     /// </summary>
     public class AccountFormDto : UserOwnerFormDto, IFormDto
     {
+
         /// <summary>
         /// Nome dell'account
         /// </summary>
@@ -27,5 +29,6 @@ namespace BudgetManager.Data.Models.Dto.Forms
         /// </summary>
         [Range(-999999999.99, 999999999.99, ErrorMessage = "Il saldo deve essere compreso tra -999,999,999.99 e 999,999,999.99")]
         public decimal Balance { get; set; }
+
     }
 }

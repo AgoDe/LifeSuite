@@ -24,6 +24,16 @@ namespace BudgetManager.Api.Controllers
             _userContext = userContext;
         }
 
+        [HttpGet("test")]
+        public IActionResult Test()
+        {
+            if (string.IsNullOrEmpty(_userContext.UserId))
+                return Unauthorized();
+
+            // Ora puoi usare _userContext.UserId in tutto il controller
+            return Ok(new { userId = _userContext.UserId });
+        }
+
         /// <summary>
         /// Recupera tutti gli account di un utente
         /// </summary>
@@ -33,6 +43,8 @@ namespace BudgetManager.Api.Controllers
         {
             if (string.IsNullOrEmpty(_userContext.UserId))
                 return Unauthorized();
+
+
 
             var accounts = await _accountService.GetAccountsByUserIdAsync(_userContext.UserId);
             return Ok(new ApiResponse<List<AccountDto>>(accounts.ToList()));

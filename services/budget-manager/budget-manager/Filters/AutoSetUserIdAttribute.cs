@@ -1,9 +1,11 @@
 ﻿using budget_manager.Models;
 using BudgetManager.Data.Models.Dto.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace budget_manager.Filters
 {
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true)]
     public class AutoSetUserIdAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -15,6 +17,7 @@ namespace budget_manager.Filters
             if (string.IsNullOrEmpty(userIdHeader))
             {
                 // Header mancante, puoi anche gestire un errore qui se vuoi
+                context.Result = new UnauthorizedResult();
                 base.OnActionExecuting(context);
                 return;
             }
@@ -22,24 +25,15 @@ namespace budget_manager.Filters
             foreach (var parameter in context.ActionArguments.Values)
             {
                 // Caso 1: DTO con string UserId
-                if (parameter is IUserOwnedFormDto userOwnedDtoString && userOwnedDtoString.UserId is string)
+                if (parameter is IUserOwnedFormDto userOwnedDtoString)
                 {
                     userOwnedDtoString.UserId = userIdHeader;
                 }
-                // Caso 2: DTO con int UserId
-                else if (parameter is IUserOwnedFormDto userOwnedDtoInt && userOwnedDtoInt.UserId is int)
-                {
-                    if (int.TryParse(userIdHeader, out var userIdInt))
-                        userOwnedDtoInt.UserId = userIdInt;
-                }
+
                 // Caso 3: Qualsiasi altro tipo (es. filter)
                 else if (parameter is IUserOwnedFilter userOwnedFilter)
                 {
-                    // Adatta qui a seconda del tipo di UserId nel filtro
-                    if (userOwnedFilter.UserId is string)
-                        userOwnedFilter.UserId = userIdHeader;
-                    else if (userOwnedFilter.UserId is int && int.TryParse(userIdHeader, out var userIdInt))
-                        userOwnedFilter.UserId = userIdInt;
+                    userOwnedFilter.UserId = userIdHeader;
                 }
             }
 
