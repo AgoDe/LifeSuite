@@ -1,0 +1,48 @@
+# --- Node.js/Frontend ---
+**/node_modules/
+**/.nuxt/
+**/.output/
+**/.data/
+**/.nitro/
+**/.cache/
+**/dist/
+
+# --- .NET/Backend ---
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/.idea/
+**/.fleet/
+**/TestResults/
+**/artifacts/
+**/.nuget/
+*.nupkg
+*.snupkg
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.sln.iml
+*.swp
+*.tmp
+*.log
+*.DS_Store
+Thumbs.db
+
+# --- Env/Secrets ---
+**/.env
+**/.env.*
+!**/.env.example
+**/appsettings.Development.json
+
+# --- Misc ---
+Dockerfile*
+ScaffoldingReadMe.txt
+project.lock.json
+project.fragment.lock.json
+npm-debug.log
+yarn-error.log
+
+# --- Ignore compiled frontend assets ---
+**/public/assets/
