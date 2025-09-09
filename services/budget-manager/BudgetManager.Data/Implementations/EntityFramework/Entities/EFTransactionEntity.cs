@@ -16,7 +16,7 @@ public class EFTransactionEntity : EFBaseEntity
    
     public Guid AccountId { get; set; }
     public Guid CategoryId { get; set; }
-    public int UserId { get; set; }
+    public string UserId { get; set; }
     public Guid? RecurringId { get; set; }
     public Guid? RelatedTransactionId { get; set; }
     

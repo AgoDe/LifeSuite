@@ -18,6 +18,6 @@ namespace BudgetManager.Data.Abstraction.Entities
         Guid? OriginAccountId { get; set; }
         Guid? DestinationAccountId { get; set; }
         Guid? CategoryId { get; set; }
-        int UserId { get; set; }
+        string UserId { get; set; }
     }
 }

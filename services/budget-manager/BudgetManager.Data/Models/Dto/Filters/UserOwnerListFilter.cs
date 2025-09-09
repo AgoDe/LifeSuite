@@ -4,5 +4,5 @@ namespace BudgetManager.Data.Models.Dto.Filters;
 
 public class UserOwnerListFilter : ListFilter, IUserOwnedFilter
 {
-    public int? UserId { get; set; }
+    public string? UserId { get; set; }
 }

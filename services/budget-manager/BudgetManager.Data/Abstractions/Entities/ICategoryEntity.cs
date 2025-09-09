@@ -6,6 +6,6 @@
         string Description { get; set; }
         Guid? ParentId { get; set; }
         string Color { get; set; }
-        int UserId { get; set; }
+        string UserId { get; set; }
     }
 }
