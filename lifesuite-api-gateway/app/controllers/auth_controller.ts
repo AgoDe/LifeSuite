@@ -1,5 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
+import { AccessToken } from '@adonisjs/auth/access_tokens'
 
 export default class AuthController {
   async register({ request, response }: HttpContext) {
@@ -56,15 +57,22 @@ export default class AuthController {
   }
 
   async logout({ response, auth }: HttpContext) {
-    // Revoca il token dal database
-    await User.accessTokens.delete(auth.user!, auth.user!.currentAccessToken.identifier)
-    
-    // Cancella cookie
-    response.clearCookie('auth_token')
-    
-    return response.json({
-      message: 'Logged out successfully'
-    })
+    try {
+      if (auth.user && auth.user.currentAccessToken) {
+        await User.accessTokens.delete(auth.user, auth.user.currentAccessToken.identifier)
+      }
+      response.clearCookie('auth_token')
+      return response.json({
+        message: 'Logout effettuato con successo',
+        tokenRevoked: true
+      })
+    } catch (error) {
+      response.clearCookie('auth_token')
+      return response.json({
+        message: 'Logout effettuato (fallback)',
+        tokenRevoked: false
+      })
+    }
   }
 
   async me({ auth, response }: HttpContext) {

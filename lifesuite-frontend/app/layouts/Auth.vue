@@ -17,7 +17,7 @@
           <!-- Sezione form -->
           <v-col cols="12" md="6" class="d-flex align-center justify-center">
             <v-container style="max-width: 400px;">
-              <slot />
+                <slot />
             </v-container>
           </v-col>
         </v-row>
