@@ -7,28 +7,35 @@ using BudgetManager.Data.Models.Enums;
 using BudgetManager.Data.Exceptions;
 using BudgetManager.Data.Models.Dto.Filters;
 using BudgetManager.Data.Models.Dto.Forms;
+using Microsoft.AspNetCore.Http.HttpResults;
+using budget_manager.Models;
 
 namespace BudgetManager.Api.Controllers
 {
     public class AccountController : CrudController<AccountDto, AccountFormDto, AccountFilter>
     {
         private readonly AccountService _accountService;
+        private readonly UserContext _userContext;
 
-        public AccountController(AccountService accountService) 
+        public AccountController(AccountService accountService, UserContext userContext)
             : base(accountService)
         {
             _accountService = accountService ?? throw new ArgumentNullException(nameof(accountService));
+            _userContext = userContext;
         }
 
         /// <summary>
         /// Recupera tutti gli account di un utente
         /// </summary>
-        [HttpGet("user/{userId}")]
+        [HttpGet("user")]
         [ProducesResponseType(typeof(List<AccountDto>), 200)]
-        public async Task<IActionResult> GetAccountsByUserId(int userId)
+        public async Task<IActionResult> GetAccountsByUserId()
         {
-            var accounts = await _accountService.GetAccountsByUserIdAsync(userId);
-            return Ok(accounts);
+            if (string.IsNullOrEmpty(_userContext.UserId))
+                return Unauthorized();
+
+            var accounts = await _accountService.GetAccountsByUserIdAsync(_userContext.UserId);
+            return Ok(new ApiResponse<List<AccountDto>>(accounts.ToList()));
         }
 
         /// <summary>

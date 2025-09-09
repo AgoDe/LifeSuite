@@ -1,3 +1,5 @@
+using budget_manager.Middleware;
+using budget_manager.Models;
 using BudgetManager.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddBudgetManagerData(builder.Configuration);
-
+builder.Services.AddScoped<UserContext>();
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -22,6 +24,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<UserContextMiddleware>();
 app.UseHttpsRedirection();
 
 

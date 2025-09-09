@@ -163,6 +163,7 @@ namespace BudgetManager.Data.Services
             var filter = new AccountFilter
             {
                 UserId = userId,
+                PageNumber = 1,
                 PageSize = int.MaxValue // Recupera tutti gli account
             };
 
