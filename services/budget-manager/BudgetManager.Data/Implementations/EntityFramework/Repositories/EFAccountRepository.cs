@@ -71,7 +71,7 @@ namespace BudgetManager.Data.Implementations.EntityFramework.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<ICollection<AccountDM>> GetListByUserId(int userId)
+        public async Task<ICollection<AccountDM>> GetListByUserId(string userId)
         {
             IQueryable<EFAccountEntity> query = dbSet;
             query = query.AsNoTracking(); // Modificato AsNoTracking() per applicarlo prima del Where

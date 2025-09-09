@@ -158,7 +158,7 @@ namespace BudgetManager.Data.Services
         /// <summary>
         /// Recupera tutti gli account di un utente
         /// </summary>
-        public async Task<ICollection<AccountDto>> GetAccountsByUserIdAsync(int userId)
+        public async Task<ICollection<AccountDto>> GetAccountsByUserIdAsync(string userId)
         {
             var filter = new AccountFilter
             {
@@ -171,7 +171,7 @@ namespace BudgetManager.Data.Services
             return result.Items;
         }
         
-        public async Task<List<SelectOption>> GetSelectOptions(int userId)
+        public async Task<List<SelectOption>> GetSelectOptions(string userId)
         {
             var accounts = await _unitOfWork.AccountRepository.GetListByUserId(userId);
 

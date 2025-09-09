@@ -14,7 +14,7 @@ namespace BudgetManager.Data.Models.Dto
         public int ChargeDay { get; set; }
         public decimal Amount { get; set; }
         public TransactionType Type { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public virtual AccountDto Account { get; set; } = null!;
         public virtual CategoryDto Category { get; set; } = null!;
         public virtual RecurringDto? RelatedRecurring { get; set; }

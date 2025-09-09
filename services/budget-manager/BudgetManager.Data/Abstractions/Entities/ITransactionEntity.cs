@@ -7,6 +7,6 @@ namespace BudgetManager.Data.Abstraction.Entities
         TransactionType Type { get; set; }
         Guid AccountId { get; set; }
         Guid OperationId { get; set; }
-        int UserId { get; set; }
+        string UserId { get; set; }
     }
 }
