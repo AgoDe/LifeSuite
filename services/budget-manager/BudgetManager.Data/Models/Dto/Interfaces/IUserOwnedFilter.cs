@@ -5,6 +5,6 @@ namespace BudgetManager.Data.Models.Dto.Interfaces
     /// </summary>
     public interface IUserOwnedFilter : IListFilter
     {
-        Guid? UserId { get; set; }
+        int? UserId { get; set; }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-using BudgetManager.Api.Extensions;
-using BudgetManager.Api.Models;
+﻿using BudgetManager.Api.Models;
 using BudgetManager.Api.Models.Interfaces;
 using BudgetManager.Data.Models.Dto;
 using BudgetManager.Data.Services;
@@ -27,7 +25,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         [HttpGet("user/{userId}")]
         [ProducesResponseType(typeof(List<AccountDto>), 200)]
-        public async Task<IActionResult> GetAccountsByUserId(Guid userId)
+        public async Task<IActionResult> GetAccountsByUserId(int userId)
         {
             var accounts = await _accountService.GetAccountsByUserIdAsync(userId);
             return Ok(accounts);
@@ -69,18 +67,14 @@ namespace BudgetManager.Api.Controllers
         //     var result = await _accountService.CreateAsync(accountDto);
         //     return CreatedAtAction(nameof(GetMyAccounts), new { id = result.Id }, result);
         // }
-        [HttpGet("select-options")]
+        [HttpGet("select-options/{userId}")]
         [ProducesResponseType(typeof(IApiResponse), 200)]
-        public async Task<IActionResult> GetSelectOptions()
+        public async Task<IActionResult> GetSelectOptions(int userId)
         {
             ApiResponse response;
             try
             {
-                var userId = HttpContext.GetCurrentUserId();
-                if (userId == null)
-                    return Unauthorized();
-                
-                var result = await _accountService.GetSelectOptions(userId.Value);
+                var result = await _accountService.GetSelectOptions(userId);
 
                 response = new ApiResponse<List<SelectOption>>(result);
             }

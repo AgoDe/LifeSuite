@@ -25,6 +25,5 @@ public class EFRecurringEntity : EFBaseEntity
     // Proprietà concrete per Entity Framework
     public EFAccountEntity Account { get; set; } = null!;
     public EFCategoryEntity Category { get; set; } = null!;
-    public EFUserEntity User { get; set; } = null!;
     public EFRecurringEntity? RelatedRecurring { get; set; }
 }

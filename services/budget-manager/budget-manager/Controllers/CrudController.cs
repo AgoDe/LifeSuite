@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using BudgetManager.Api.Models.Interfaces;
 using BudgetManager.Api.Models;
 using BudgetManager.Data.Abstraction.Models.Dto;
-using Microsoft.AspNetCore.Authorization;
 using System.Net;
 
 namespace BudgetManager.Api.Controllers
@@ -18,7 +17,6 @@ namespace BudgetManager.Api.Controllers
     /// <typeparam name="TFormDto">Tipo del DTO per operazioni di creazione/modifica</typeparam>
     /// <typeparam name="TFilter">Tipo del filtro per le query di lista</typeparam>
     [ApiController]
-    [Authorize]
     [Route("api/[controller]")]
     public abstract class CrudController<TDto, TFormDto, TFilter> : ControllerBase
         where TDto : class, IBaseDto
@@ -116,7 +114,6 @@ namespace BudgetManager.Api.Controllers
         [ProducesResponseType(typeof(IApiResponse), 204)]
         [ProducesResponseType(typeof(IApiResponse), 400)]
         [ProducesResponseType(typeof(IApiResponse), 404)]
-        [AutoSetUserId]
         public virtual async Task<IActionResult> Update(Guid id, [FromBody] TFormDto formDto)
         {
             ApiResponse response;
@@ -207,7 +204,6 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         [HttpGet("count")]
         [ProducesResponseType(typeof(IApiResponse), 200)]
-        [AutoSetUserId]
         public virtual async Task<IActionResult> Count([FromQuery] TFilter filter)
         {
             ApiResponse response;
@@ -229,7 +225,6 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         [HttpPost("validate")]
         [ProducesResponseType(typeof(IApiResponse), 200)]
-        [AutoSetUserId]
         public virtual async Task<IActionResult> Validate([FromBody] TFormDto formDto)
         {
             ApiResponse response;

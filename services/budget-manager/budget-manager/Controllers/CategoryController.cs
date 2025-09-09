@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-using BudgetManager.Api.Extensions;
-using BudgetManager.Api.Models;
+﻿using BudgetManager.Api.Models;
 using BudgetManager.Data.Models.Dto;
 using BudgetManager.Data.Models.Dto.Filters;
 using BudgetManager.Data.Models.Dto.Forms;
@@ -19,17 +17,13 @@ public class CategoryController : CrudController<CategoryDto, CategoryFormDto, C
         _categoryService = categoryService; 
     }
     
-    [HttpGet("select-options")]
-    public async Task<IActionResult> GetSelectOptions()
+    [HttpGet("select-options/{userId}")]
+    public async Task<IActionResult> GetSelectOptions(int userId)
     {
         ApiResponse response;
         try
         {
-            var userId = HttpContext.GetCurrentUserId();
-            if(userId == null)
-                return Unauthorized();
-            
-            var result = await _categoryService.GetSelectOptions(userId.Value);
+            var result = await _categoryService.GetSelectOptions(userId);
 
             response = new ApiResponse<List<SelectOption>>(result);
         }

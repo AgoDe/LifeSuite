@@ -5,5 +5,5 @@ namespace BudgetManager.Data.Models.Dto.Forms;
 
 public class UserOwnerFormDto : IUserOwnedFormDto
 {
-    public Guid UserId { get; set; }
+    public int UserId { get; set; }
 }

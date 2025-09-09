@@ -9,5 +9,4 @@ public class CategoryDM : BaseDomainModel
     // Navigational properties
     public virtual CategoryDM? Parent { get; set; }
     public virtual ICollection<CategoryDM> Children { get; set; } = new List<CategoryDM>();
-    public virtual UserDM User { get; set; } = null!;
 }
