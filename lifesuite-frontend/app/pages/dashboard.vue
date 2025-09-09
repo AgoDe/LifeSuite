@@ -4,7 +4,7 @@
     <v-row class="mb-6">
       <v-col cols="12">
         <h1 class="text-h4 font-weight-bold mb-2">
-          Benvenuto, {{ user?.firstName || 'Utente' }}! 👋
+          Benvenuto, {{ user?.fullName || 'Utente' }}! 👋
         </h1>
         <p class="text-body-1 text-medium-emphasis">
           Ecco una panoramica della tua giornata e dei tuoi obiettivi.

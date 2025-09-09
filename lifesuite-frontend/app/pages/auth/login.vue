@@ -7,7 +7,7 @@
 
     <v-form @submit.prevent="handleLogin" ref="form">
       <v-text-field
-        v-model="form.email"
+        v-model="email"
         label="Email"
         type="email"
         variant="outlined"
@@ -18,10 +18,10 @@
       />
       
       <v-text-field
-        v-model="form.password"
+        v-model="password"
         :type="showPassword ? 'text' : 'password'"
         label="Password"
-        variant="solo"
+        variant="outlined"
         prepend-inner-icon="mdi-lock"
         :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
         @click:append-inner="showPassword = !showPassword"
@@ -33,7 +33,7 @@
       <v-row class="mb-4">
         <v-col cols="6">
           <v-checkbox
-            v-model="form.rememberMe"
+            v-model="rememberMe"
             label="Ricordami"
             density="compact"
           />
@@ -93,20 +93,15 @@ definePageMeta({
   layout: 'auth'
 })
 
-interface LoginForm {
-  email: string
-  password: string
-  rememberMe: boolean
-}
+const { login } = useAuth()
 
-const form = ref<LoginForm>({
-  email: '',
-  password: '',
-  rememberMe: false
-})
-
+// Variabili semplici con ref
+const email = ref('')
+const password = ref('')
+const rememberMe = ref(false)
 const showPassword = ref(false)
 const loading = ref(false)
+const errorMessage = ref('')
 
 // Regole di validazione
 const emailRules = [
@@ -120,30 +115,34 @@ const passwordRules = [
 ]
 
 // Funzioni
-const { login } = useAuth()
-
 const handleLogin = async () => {
   loading.value = true
+  errorMessage.value = ''
   
   try {
-    // Usa il composable di autenticazione
     await login({
-      email: form.value.email,
-      password: form.value.password
+      email: email.value,
+      password: password.value
     })
     
-    // Il redirect verrà gestito automaticamente dal composable
-  } catch (error) {
+  } catch (error: any) {
     console.error('Errore durante il login:', error)
-    // Mostra errore all'utente
-    // Potresti aggiungere un alert o notification qui
+    errorMessage.value = error.message || 'Errore durante il login. Riprova.'
   } finally {
     loading.value = false
   }
 }
 
 const loginWithGoogle = () => {
-  // Implementa login con Google
-  console.log('Login con Google')
+  console.log('Login con Google - da implementare')
+  errorMessage.value = 'Login con Google non ancora implementato'
 }
+
+// Debug: monitora i cambiamenti
+watch([email, password], ([newEmail, newPassword]) => {
+  console.log('Valori cambiati:', { email: newEmail, password: newPassword })
+  if (errorMessage.value) {
+    errorMessage.value = ''
+  }
+})
 </script>

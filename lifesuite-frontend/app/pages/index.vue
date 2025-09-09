@@ -9,11 +9,18 @@
 
 <script setup lang="ts">
 // Controlla se l'utente è autenticato e reindirizza di conseguenza
-const { isLoggedIn } = useAuth()
+const { checkAuth } = useAuth()
 
-if (isLoggedIn.value) {
-  await navigateTo('/dashboard')
-} else {
+try {
+  const isAuthenticated = await checkAuth()
+  
+  if (isAuthenticated) {
+    await navigateTo('/dashboard')
+  } else {
+    await navigateTo('/auth/login')
+  }
+} catch (error) {
+  console.error('Errore nel controllo autenticazione:', error)
   await navigateTo('/auth/login')
 }
 </script>

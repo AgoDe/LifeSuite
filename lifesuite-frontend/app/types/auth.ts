@@ -2,9 +2,7 @@
 export interface User {
   id: number
   email: string
-  firstName: string
-  lastName: string
-  name: string
+  fullName: string
   avatar?: string
   createdAt: string
   updatedAt: string

@@ -1,7 +1,7 @@
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware(async (to, from) => {
   const { isLoggedIn } = useAuth()
   
-  // If user is not logged in and trying to access protected route
+  // Controllo semplice - se non c'è utente nello stato, reindirizza
   if (!isLoggedIn.value) {
     return navigateTo('/auth/login')
   }

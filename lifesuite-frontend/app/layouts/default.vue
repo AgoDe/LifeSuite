@@ -112,7 +112,7 @@
         
         <v-list>
           <v-list-item>
-            <v-list-item-title>{{ user?.name || 'Utente' }}</v-list-item-title>
+            <v-list-item-title>{{ user?.fullName || 'Utente' }}</v-list-item-title>
             <v-list-item-subtitle>{{ user?.email || 'user@example.com' }}</v-list-item-subtitle>
           </v-list-item>
           <v-divider />
