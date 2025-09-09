@@ -14,5 +14,4 @@ public class EFCategoryEntity : EFBaseEntity
     public virtual ICollection<EFCategoryEntity> Children { get; set; } = new List<EFCategoryEntity>();
     public virtual ICollection<EFTransactionEntity> Transactions { get; set; } = new List<EFTransactionEntity>();
     public virtual ICollection<EFRecurringEntity> Recurrings { get; set; } = new List<EFRecurringEntity>();
-    public virtual EFUserEntity User { get; set; } = null!;
 }

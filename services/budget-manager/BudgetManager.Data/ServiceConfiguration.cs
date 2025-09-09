@@ -1,9 +1,6 @@
 using BudgetManager.Data.Abstraction.UnitOfWork;
 using BudgetManager.Data.Abstractions.Factories;
 using BudgetManager.Data.Customizations;
-using BudgetManager.Data.Implementations.MongoDB;
-using BudgetManager.Data.Implementations.MongoDB.Factories;
-using BudgetManager.Data.Implementations.MongoDB.UnitOfWork;
 using BudgetManager.Data.Implementations.EntityFramework;
 using BudgetManager.Data.Services;
 using Microsoft.Extensions.Configuration;

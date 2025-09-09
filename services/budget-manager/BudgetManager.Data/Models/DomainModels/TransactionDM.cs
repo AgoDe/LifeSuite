@@ -20,7 +20,6 @@ public class TransactionDM : BaseDomainModel
     public Guid AccountId { get; set; }
 
     // Navigational properties
-    public virtual UserDM User { get; set; } = null!;
     public virtual CategoryDM Category { get; set; } = null!;
     public virtual RecurringDM Recurring { get; set; } = null!;
     public virtual TransactionDM RelatedTransaction { get; set; } = null!;

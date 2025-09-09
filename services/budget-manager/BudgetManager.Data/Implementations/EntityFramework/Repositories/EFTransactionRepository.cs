@@ -7,7 +7,6 @@ using BudgetManager.Data.Models.Dto.Forms;
 using BudgetManager.Data.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using SecondBrain.Data.Abstraction.Repositories;
-using SharpCompress.Common;
 
 namespace BudgetManager.Data.Implementations.EntityFramework.Repositories
 {

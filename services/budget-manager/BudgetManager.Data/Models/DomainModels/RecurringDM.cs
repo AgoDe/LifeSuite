@@ -21,5 +21,4 @@ public class RecurringDM : BaseDomainModel
     public AccountDM Account { get; set; } = null!;
     public virtual RecurringDM? RelatedRecurring { get; set; }
     public virtual CategoryDM Category { get; set; } = null!;
-    public UserDM User { get; set; }
 }

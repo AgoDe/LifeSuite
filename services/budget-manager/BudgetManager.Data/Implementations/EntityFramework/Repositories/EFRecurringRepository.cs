@@ -6,7 +6,6 @@ using BudgetManager.Data.Models.Dto.Forms;
 using BudgetManager.Data.Models.Enums;
 using BudgetManager.Data.Services;
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Bson;
 using SecondBrain.Data.Abstraction.Repositories;
 using System.Linq.Expressions;
 
