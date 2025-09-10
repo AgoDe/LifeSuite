@@ -1,6 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
-import { AccessToken } from '@adonisjs/auth/access_tokens'
 
 export default class AuthController {
   async register({ request, response }: HttpContext) {
@@ -21,7 +20,7 @@ export default class AuthController {
       fullName: user.fullName
     })
   }
-  async login({ request, response, auth }: HttpContext) {
+  async login({ request, response }: HttpContext) {
     const { email, password } = request.only(['email', 'password'])
 
     try {

@@ -13,3 +13,13 @@ router.group(() => {
   router.post('/logout', '#controllers/auth_controller.logout')
   router.get('/me', '#controllers/auth_controller.me').use(middleware.auth())
 }).prefix('/api/auth')
+
+//budget manager routes
+router.group(() => {
+
+    router.group(() => {
+        router.get('/', '#controllers/budgetManager/accounts_controller.index').use(middleware.auth())
+
+    }).prefix('/accounts')
+
+}).prefix('/api/budget-manager')
