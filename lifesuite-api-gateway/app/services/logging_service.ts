@@ -6,7 +6,7 @@ import type {
   MicroserviceLogData, 
   RequestLogData, 
   ErrorLogData 
-} from '#types/logging'
+} from '../types/logging.js'
 
 export class LoggingService {
   private static instance: LoggingService

@@ -1,0 +1,97 @@
+version: '3.8'
+
+networks:
+  lifesuite:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+
+services:
+  # Database PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: lifesuite-postgres
+    environment:
+      POSTGRES_DB: lifesuite
+      POSTGRES_USER: lifesuite
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-lifesuite123}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - lifesuite
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lifesuite"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Cache Redis
+  redis:
+    image: redis:7-alpine
+    container_name: lifesuite-redis
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - lifesuite
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./lifesuite-api-gateway
+      dockerfile: Dockerfile
+    image: lifesuite/api-gateway:latest
+    container_name: lifesuite-gateway
+    ports:
+      - "3333:3333"
+    environment:
+      NODE_ENV: development
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: lifesuite
+      DB_USERNAME: lifesuite
+      DB_PASSWORD: ${DB_PASSWORD:-lifesuite123}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      BUDGET_MANAGER_URL: http://budget-manager
+      MEAL_PLANNER_URL: http://meal-planner
+    networks:
+      - lifesuite
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Budget Manager
+  budget-manager:
+    build:
+      context: ./services/budget-manager/budget-manager
+      dockerfile: Dockerfile
+    image: lifesuite/budget-manager:latest
+    container_name: lifesuite-budget
+    ports:
+      - "5001:80"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=lifesuite;Username=lifesuite;Password=${DB_PASSWORD:-lifesuite123};"
+      Redis__Configuration: "redis:6379"
+    networks:
+      - lifesuite
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
