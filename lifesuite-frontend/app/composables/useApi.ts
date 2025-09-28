@@ -7,7 +7,9 @@ export const useApi = () => {
     options: any = {}
   ): Promise<T> => {
     try {
-      const response = await $fetch<T>(`${baseURL}/api/${endpoint}`, {
+      const fullUrl = `${baseURL}/api/${endpoint}`
+      console.log('🚀 API Call:', fullUrl)
+      const response = await $fetch<T>(fullUrl, {
         ...options,
         credentials: 'include', // Include automaticamente i cookie
         headers: {

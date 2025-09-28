@@ -15,11 +15,13 @@ const corsConfig = defineConfig({
       'http://localhost:3000', // Nuxt dev
       'http://127.0.0.1:3000', // Nuxt dev alternativo
       'http://localhost:5173', // Vite dev (se userai)
+      'http://localhost:3333', // Allow same origin requests
+      'http://127.0.0.1:3333', // Allow same origin requests
       // Aggiungerai domini di produzione qui
     ]
 
-    // In sviluppo, permetti anche richieste senza origin (Postman, etc)
-  if (env.get('NODE_ENV') === 'development' && !origin) {
+    // In sviluppo, permetti tutte le origin per debug
+    if (env.get('NODE_ENV') === 'development') {
       return true
     }
 

@@ -1,0 +1,14 @@
+node_modules
+.nuxt
+.output
+.data
+.nitro
+.cache
+dist
+.git
+.gitignore
+README.md
+.env
+.DS_Store
+Thumbs.db
+*.log

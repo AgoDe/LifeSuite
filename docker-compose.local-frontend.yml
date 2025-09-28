@@ -1,0 +1,23 @@
+# Configurazione per sviluppo con frontend locale
+# Usa: docker-compose -f docker-compose.yml -f docker-compose.local-frontend.yml up -d
+
+version: '3.8'
+
+services:
+  # Rimuoviamo il servizio frontend dal compose
+  # Il frontend girerà localmente con npm run dev
+  
+  api-gateway:
+    volumes:
+      # Hot reload per development
+      - ./lifesuite-api-gateway:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+      LOG_LEVEL: debug
+    command: ["npm", "run", "dev"]
+
+  budget-manager:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
