@@ -1,6 +1,6 @@
-﻿using budget_manager.Models;
+﻿using BudgetManager.Api.Models;
 
-namespace budget_manager.Middleware
+namespace BudgetManager.Api.Middleware
 {
     public class UserContextMiddleware
     {

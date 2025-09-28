@@ -1,4 +1,4 @@
-﻿namespace budget_manager.Models
+﻿namespace BudgetManager.Api.Models
 {
     public class UserContext
     {

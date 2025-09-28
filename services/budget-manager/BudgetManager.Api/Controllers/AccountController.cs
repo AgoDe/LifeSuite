@@ -8,7 +8,7 @@ using BudgetManager.Data.Exceptions;
 using BudgetManager.Data.Models.Dto.Filters;
 using BudgetManager.Data.Models.Dto.Forms;
 using Microsoft.AspNetCore.Http.HttpResults;
-using budget_manager.Models;
+using BudgetManager.Api.Models;
 
 namespace BudgetManager.Api.Controllers
 {
@@ -86,14 +86,17 @@ namespace BudgetManager.Api.Controllers
         //     var result = await _accountService.CreateAsync(accountDto);
         //     return CreatedAtAction(nameof(GetMyAccounts), new { id = result.Id }, result);
         // }
-        [HttpGet("select-options/{userId}")]
+        [HttpGet("select-options")]
         [ProducesResponseType(typeof(IApiResponse), 200)]
         public async Task<IActionResult> GetSelectOptions(string userId)
         {
             ApiResponse response;
             try
             {
-                var result = await _accountService.GetSelectOptions(userId);
+                if (string.IsNullOrEmpty(_userContext.UserId))
+                    return Unauthorized();
+
+                var result = await _accountService.GetSelectOptions(_userContext.UserId);
 
                 response = new ApiResponse<List<SelectOption>>(result);
             }

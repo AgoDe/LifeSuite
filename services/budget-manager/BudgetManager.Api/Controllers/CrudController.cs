@@ -7,7 +7,7 @@ using BudgetManager.Api.Models.Interfaces;
 using BudgetManager.Api.Models;
 using BudgetManager.Data.Abstraction.Models.Dto;
 using System.Net;
-using budget_manager.Filters;
+using BudgetManager.Api.Filters;
 
 namespace BudgetManager.Api.Controllers
 {

@@ -1,9 +1,9 @@
-﻿using budget_manager.Models;
+﻿using BudgetManager.Api.Models;
 using BudgetManager.Data.Models.Dto.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace budget_manager.Filters
+namespace BudgetManager.Api.Filters
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true)]
     public class AutoSetUserIdAttribute : ActionFilterAttribute
