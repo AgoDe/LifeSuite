@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetManager.Api.Controllers
 {
-    [Route("health")]
+    [Route("api/health")]
     [ApiController]
     public class HealthController : ControllerBase
     {

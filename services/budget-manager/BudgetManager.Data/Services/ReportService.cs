@@ -198,11 +198,11 @@ public class ReportService : IReportService
             }
         }
 
-        // Calcola le stime per le spese variabili (media degli ultimi 3 mesi)
-        var variableExpenses = await CalculateVariableExpenseEstimatesAsync(userId, accountId, startDate);
+        //// Calcola le stime per le spese variabili (media degli ultimi 3 mesi)
+        //var variableExpenses = await CalculateVariableExpenseEstimatesAsync(userId, accountId, startDate);
 
-        // Aggiungi le stime variabili alle spese previste
-        predictedExpense += variableExpenses.Sum(v => v.Average);
+        //// Aggiungi le stime variabili alle spese previste
+        //predictedExpense += variableExpenses.Sum(v => v.Average);
 
         var predictedBalance = currentBalance + predictedIncome - predictedExpense;
 
@@ -217,7 +217,7 @@ public class ReportService : IReportService
             PredictedExpense = predictedExpense,
             PredictedBalance = predictedBalance,
             Recurrences = recurrencePreview.OrderBy(r => r.Date).ToList(),
-            VariableExpenseEstimate = variableExpenses,
+            //VariableExpenseEstimate = variableExpenses,
             Alerts = alerts
         };
     }
@@ -292,8 +292,8 @@ public class ReportService : IReportService
 
         while (currentDate <= endDate)
         {
-            var targetDay = Math.Min(recurring.ChargeDay, DateTime.DaysInMonth(currentDate.Year, currentDate.Month));
-            var candidateDate = new DateTime(currentDate.Year, currentDate.Month, targetDay);
+       
+            var candidateDate = new DateTime(currentDate.Year, currentDate.Month, recurring.ChargeDay);
 
             if (candidateDate >= startDate && candidateDate <= endDate && 
                 candidateDate >= recurring.ActiveFrom && candidateDate <= recurring.ActiveTo)

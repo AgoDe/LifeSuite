@@ -88,7 +88,7 @@ namespace BudgetManager.Api.Controllers
         // }
         [HttpGet("select-options")]
         [ProducesResponseType(typeof(IApiResponse), 200)]
-        public async Task<IActionResult> GetSelectOptions(string userId)
+        public async Task<IActionResult> GetSelectOptions()
         {
             ApiResponse response;
             try

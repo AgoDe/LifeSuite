@@ -22,6 +22,17 @@ namespace BudgetManager.Data.Implementations.EntityFramework.Repositories
             _mapper = mapper;
         }
 
+        public async override Task<Guid> CreateAsync(RecurringFormDto formDto)
+        {
+            var activeToDate = GetActiveToDate(formDto);
+            var chargeDay = GetChargeDay(formDto);
+
+            formDto.ChargeDay = chargeDay;
+            formDto.ActiveTo = activeToDate;
+
+            return await base.CreateAsync(formDto);
+        }
+
         public async Task<(Guid, Guid)> CreateTransferRecurring(RecurringFormDto formDto)
         {
             var activeToDate = GetActiveToDate(formDto);
@@ -207,7 +218,7 @@ namespace BudgetManager.Data.Implementations.EntityFramework.Repositories
 
         public int GetChargeDay(RecurringFormDto formDto)
         { 
-            if (formDto.ChargeDay.HasValue)
+            if (formDto.ChargeDay.HasValue && formDto.ChargeDay.Value > 0)
             {
                 return formDto.ChargeDay.Value;
             }

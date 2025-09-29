@@ -11,19 +11,24 @@ public class CategoryController : CrudController<CategoryDto, CategoryFormDto, C
 {
     
     private readonly CategoryService _categoryService;
+    private readonly UserContext _userContext;
 
-    public CategoryController(CategoryService categoryService) : base(categoryService)
+    public CategoryController(CategoryService categoryService, UserContext userContext) : base(categoryService)
     {
-        _categoryService = categoryService; 
+        _categoryService = categoryService;
+        _userContext = userContext;
     }
-    
-    [HttpGet("select-options/{userId}")]
-    public async Task<IActionResult> GetSelectOptions(string userId)
+
+    [HttpGet("select-options")]
+    public async Task<IActionResult> GetSelectOptions()
     {
         ApiResponse response;
         try
         {
-            var result = await _categoryService.GetSelectOptions(userId);
+            if (string.IsNullOrEmpty(_userContext.UserId))
+                return Unauthorized();
+
+            var result = await _categoryService.GetSelectOptions(_userContext.UserId);
 
             response = new ApiResponse<List<SelectOption>>(result);
         }

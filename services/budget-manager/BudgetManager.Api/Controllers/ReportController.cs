@@ -9,7 +9,7 @@ namespace BudgetManager.Api.Controllers;
 /// Controller per i report e le previsioni di budget
 /// </summary>
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class ReportController : ControllerBase
 {
     private readonly IReportService _reportService;

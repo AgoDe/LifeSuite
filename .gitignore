@@ -46,3 +46,4 @@ yarn-error.log
 
 # --- Ignore compiled frontend assets ---
 **/public/assets/
+.fake

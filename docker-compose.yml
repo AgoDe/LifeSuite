@@ -61,20 +61,6 @@ services:
       - api-gateway
     restart: unless-stopped
 
-  # pgAdmin4 per gestire il database
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: lifesuite-pgadmin
-    environment:
-      PGLADMIN_DEFAULT_EMAIL: admin@lifesuite.com
-      PGADMIN_DEFAULT_PASSWORD: admin123
-    ports:
-      - "8080:80"
-    networks:
-      - lifesuite
-    depends_on:
-      - postgres
-
   # API Gateway
   api-gateway:
     build:
@@ -112,7 +98,7 @@ services:
     image: lifesuite/budget-manager:latest
     container_name: lifesuite-budget
     ports:
-      - "5001:8080"
+      - "5170:8080"
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=lifesuite;Username=lifesuite;Password=${DB_PASSWORD:-lifesuite123};"
