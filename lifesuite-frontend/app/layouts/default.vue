@@ -39,15 +39,40 @@
 
       <!-- Menu di navigazione -->
       <v-list nav>
-        <v-list-item
-          v-for="item in menuItems"
-          :key="item.title"
-          :to="item.to"
-          :prepend-icon="item.icon"
-          :title="item.title"
-          color="primary"
-          class="mb-1"
-        />
+        <template v-for="item in menuItems" :key="item.title">
+          <!-- Item con sottomenu -->
+          <v-list-group v-if="item.subItems" :value="item.title">
+            <template v-slot:activator="{ props }">
+              <v-list-item
+                v-bind="props"
+                :prepend-icon="item.icon"
+                :title="item.title"
+                color="primary"
+                class="mb-1"
+              />
+            </template>
+            
+            <v-list-item
+              v-for="subItem in item.subItems"
+              :key="subItem.title"
+              :to="subItem.to"
+              :prepend-icon="subItem.icon"
+              :title="subItem.title"
+              color="primary"
+              class="mb-1 ml-4"
+            />
+          </v-list-group>
+          
+          <!-- Item normale -->
+          <v-list-item
+            v-else
+            :to="item.to"
+            :prepend-icon="item.icon"
+            :title="item.title"
+            color="primary"
+            class="mb-1"
+          />
+        </template>
       </v-list>
 
       <!-- Footer del sidebar -->
@@ -154,9 +179,30 @@ const menuItems = [
     to: '/dashboard'
   },
   {
-    title: 'Budget',
+    title: 'Budget Manager',
     icon: 'mdi-wallet',
-    to: '/budget'
+    subItems: [
+      {
+        title: 'Account',
+        icon: 'mdi-bank',
+        to: '/budget/accounts'
+      },
+      {
+        title: 'Categorie',
+        icon: 'mdi-tag-multiple',
+        to: '/budget/categories'
+      },
+      {
+        title: 'Transazioni',
+        icon: 'mdi-swap-horizontal',
+        to: '/budget/transactions'
+      },
+      {
+        title: 'Ricorrenze',
+        icon: 'mdi-repeat',
+        to: '/budget/recurring'
+      }
+    ]
   },
   {
     title: 'Calendar',
@@ -182,7 +228,22 @@ const menuItems = [
 
 // Page title computation
 const pageTitle = computed(() => {
-  const currentItem = menuItems.find(item => route.path.startsWith(item.to))
+  const path = route.path
+  
+  // Check for budget manager subpages
+  if (path.startsWith('/budget/')) {
+    const budgetItem = menuItems.find(item => item.title === 'Budget Manager')
+    if (budgetItem?.subItems) {
+      const subItem = budgetItem.subItems.find(sub => path.startsWith(sub.to))
+      if (subItem) {
+        return `Budget Manager - ${subItem.title}`
+      }
+    }
+    return 'Budget Manager'
+  }
+  
+  // Check for regular menu items
+  const currentItem = menuItems.find(item => item.to && path.startsWith(item.to))
   return currentItem?.title || 'LifeSuite'
 })
 
