@@ -2,7 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { callMicroservice } from '#services/microservice_client'
 import { logger } from '#services/logging_service'
 
-export default class AccountsController {
+export default class CategoriesController {
 
   public async index({ auth, request, response }: HttpContext) {
     const userId = auth.user?.id
@@ -13,23 +13,18 @@ export default class AccountsController {
       userId: userId?.toString(),
       service: 'BudgetManager',
       method: 'GET',
-      endpoint: '/accounts'
+      endpoint: '/categories'
     })
 
     try {
-      logger.info('🏦 Fetching user accounts from BudgetManager', context)
+      logger.info('📂 Fetching categories from BudgetManager', context)
 
       const result = await callMicroservice({
-        url: `${process.env.BUDGET_MANAGER_URL}/accounts/user`,
+        url: `${process.env.BUDGET_MANAGER_URL}/categories`,
         method: 'get',
         userId: userId!,
         params: request.qs(),
         correlationId
-      })
-
-      logger.info('✅ Accounts retrieved successfully', context, {
-        accountCount: Array.isArray(result.data) ? result.data.length : 'unknown',
-        duration: `${result.duration}ms`
       })
 
       return response.json({
@@ -43,11 +38,8 @@ export default class AccountsController {
       })
 
     } catch (error: any) {
-      logger.error('❌ Failed to fetch accounts', context, {
-        errorMessage: error.message,
-        microservice: error.microservice,
-        statusCode: error.status,
-        duration: error.duration
+      logger.error('❌ Failed to fetch categories', context, {
+        errorMessage: error.message
       })
 
       throw error
@@ -57,21 +49,21 @@ export default class AccountsController {
   public async show({ auth, request, response, params }: HttpContext) {
     const userId = auth.user?.id
     const correlationId = request.correlationId
-    const accountId = params.id
+    const categoryId = params.id
     
     const context = logger.createContext({
       correlationId,
       userId: userId?.toString(),
       service: 'BudgetManager',
       method: 'GET',
-      endpoint: `/accounts/${accountId}`
+      endpoint: `/categories/${categoryId}`
     })
 
     try {
-      logger.info(`🏦 Fetching account ${accountId} from BudgetManager`, context)
+      logger.info(`📂 Fetching category ${categoryId} from BudgetManager`, context)
 
       const result = await callMicroservice({
-        url: `${process.env.BUDGET_MANAGER_URL}/accounts/${accountId}`,
+        url: `${process.env.BUDGET_MANAGER_URL}/categories/${categoryId}`,
         method: 'get',
         userId: userId!,
         correlationId
@@ -88,9 +80,9 @@ export default class AccountsController {
       })
 
     } catch (error: any) {
-      logger.error(`❌ Failed to fetch account ${accountId}`, context, {
+      logger.error(`❌ Failed to fetch category ${categoryId}`, context, {
         errorMessage: error.message,
-        accountId
+        categoryId
       })
 
       throw error
@@ -106,14 +98,14 @@ export default class AccountsController {
       userId: userId?.toString(),
       service: 'BudgetManager',
       method: 'POST',
-      endpoint: '/accounts'
+      endpoint: '/categories'
     })
 
     try {
-      logger.info('🏦 Creating new account in BudgetManager', context)
+      logger.info('📂 Creating new category in BudgetManager', context)
 
       const result = await callMicroservice({
-        url: `${process.env.BUDGET_MANAGER_URL}/accounts`,
+        url: `${process.env.BUDGET_MANAGER_URL}/categories`,
         method: 'post',
         userId: userId!,
         data: request.body(),
@@ -131,7 +123,7 @@ export default class AccountsController {
       })
 
     } catch (error: any) {
-      logger.error('❌ Failed to create account', context, {
+      logger.error('❌ Failed to create category', context, {
         errorMessage: error.message
       })
 
@@ -142,21 +134,21 @@ export default class AccountsController {
   public async update({ auth, request, response, params }: HttpContext) {
     const userId = auth.user?.id
     const correlationId = request.correlationId
-    const accountId = params.id
+    const categoryId = params.id
     
     const context = logger.createContext({
       correlationId,
       userId: userId?.toString(),
       service: 'BudgetManager',
       method: 'PUT',
-      endpoint: `/accounts/${accountId}`
+      endpoint: `/categories/${categoryId}`
     })
 
     try {
-      logger.info(`🏦 Updating account ${accountId} in BudgetManager`, context)
+      logger.info(`📂 Updating category ${categoryId} in BudgetManager`, context)
 
       const result = await callMicroservice({
-        url: `${process.env.BUDGET_MANAGER_URL}/accounts/${accountId}`,
+        url: `${process.env.BUDGET_MANAGER_URL}/categories/${categoryId}`,
         method: 'put',
         userId: userId!,
         data: request.body(),
@@ -174,9 +166,9 @@ export default class AccountsController {
       })
 
     } catch (error: any) {
-      logger.error(`❌ Failed to update account ${accountId}`, context, {
+      logger.error(`❌ Failed to update category ${categoryId}`, context, {
         errorMessage: error.message,
-        accountId
+        categoryId
       })
 
       throw error
@@ -186,21 +178,21 @@ export default class AccountsController {
   public async destroy({ auth, request, response, params }: HttpContext) {
     const userId = auth.user?.id
     const correlationId = request.correlationId
-    const accountId = params.id
+    const categoryId = params.id
     
     const context = logger.createContext({
       correlationId,
       userId: userId?.toString(),
       service: 'BudgetManager',
       method: 'DELETE',
-      endpoint: `/accounts/${accountId}`
+      endpoint: `/categories/${categoryId}`
     })
 
     try {
-      logger.info(`🏦 Deleting account ${accountId} from BudgetManager`, context)
+      logger.info(`📂 Deleting category ${categoryId} from BudgetManager`, context)
 
       const result = await callMicroservice({
-        url: `${process.env.BUDGET_MANAGER_URL}/accounts/${accountId}`,
+        url: `${process.env.BUDGET_MANAGER_URL}/categories/${categoryId}`,
         method: 'delete',
         userId: userId!,
         correlationId
@@ -216,9 +208,9 @@ export default class AccountsController {
       })
 
     } catch (error: any) {
-      logger.error(`❌ Failed to delete account ${accountId}`, context, {
+      logger.error(`❌ Failed to delete category ${categoryId}`, context, {
         errorMessage: error.message,
-        accountId
+        categoryId
       })
 
       throw error
@@ -234,14 +226,14 @@ export default class AccountsController {
       userId: userId?.toString(),
       service: 'BudgetManager',
       method: 'GET',
-      endpoint: '/accounts/select-options'
+      endpoint: '/categories/select-options'
     })
 
     try {
-      logger.info('🏦 Fetching account select options from BudgetManager', context)
+      logger.info('📂 Fetching category select options from BudgetManager', context)
 
       const result = await callMicroservice({
-        url: `${process.env.BUDGET_MANAGER_URL}/accounts/select-options`,
+        url: `${process.env.BUDGET_MANAGER_URL}/categories/select-options`,
         method: 'get',
         userId: userId!,
         correlationId
@@ -258,51 +250,8 @@ export default class AccountsController {
       })
 
     } catch (error: any) {
-      logger.error('❌ Failed to fetch account select options', context, {
+      logger.error('❌ Failed to fetch category select options', context, {
         errorMessage: error.message
-      })
-
-      throw error
-    }
-  }
-
-  public async updateBalance({ auth, request, response, params }: HttpContext) {
-    const userId = auth.user?.id
-    const correlationId = request.correlationId
-    const accountId = params.id
-    
-    const context = logger.createContext({
-      correlationId,
-      userId: userId?.toString(),
-      service: 'BudgetManager',
-      method: 'PATCH',
-      endpoint: `/accounts/${accountId}/balance`
-    })
-
-    try {
-      logger.info(`🏦 Updating balance for account ${accountId} in BudgetManager`, context)
-
-      const result = await callMicroservice({
-        url: `${process.env.BUDGET_MANAGER_URL}/accounts/${accountId}/balance`,
-        method: 'patch',
-        userId: userId!,
-        data: request.body(),
-        correlationId
-      })
-
-      return response.status(204).json({
-        success: true,
-        meta: {
-          correlationId,
-          timestamp: new Date().toISOString(),
-          duration: result.duration
-        }
-      })
-
-    } catch (error: any) {
-      logger.error(`❌ Failed to update account balance ${accountId}`, context, {
-        errorMessage: error.message,
-        accountId
       })
 
       throw error
