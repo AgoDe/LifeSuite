@@ -4,3 +4,35 @@ GET {{budget_manager_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+# Test Report Summary - Monthly
+GET {{budget_manager_HostAddress}}/report/summary?period=2025-09
+Accept: application/json
+Content-Type: application/json
+x-user-id: test-user-123
+
+###
+
+# Test Report Summary - Annual
+GET {{budget_manager_HostAddress}}/report/summary?period=2025
+Accept: application/json
+Content-Type: application/json
+x-user-id: test-user-123
+
+###
+
+# Test Report Summary with Account ID
+GET {{budget_manager_HostAddress}}/report/summary?period=2025-09&accountId=12345678-1234-5678-9abc-123456789abc
+Accept: application/json
+Content-Type: application/json
+x-user-id: test-user-123
+
+###
+
+# Test Forecast Report
+GET {{budget_manager_HostAddress}}/report/forecast?period=2025-10&accountId=12345678-1234-5678-9abc-123456789abc
+Accept: application/json
+Content-Type: application/json
+x-user-id: test-user-123
+
+###
