@@ -1,5 +1,6 @@
 using BudgetManager.Data.Abstraction.UnitOfWork;
 using BudgetManager.Data.Abstractions.Factories;
+using BudgetManager.Data.Abstractions.Services;
 using BudgetManager.Data.Customizations;
 using BudgetManager.Data.Implementations.EntityFramework;
 using BudgetManager.Data.Services;
@@ -30,6 +31,7 @@ namespace BudgetManager.Data
             services.AddScoped<CategoryService>();
             services.AddScoped<TransactionService>();
             services.AddScoped<RecurringService>();
+            services.AddScoped<IReportService, ReportService>();
             
             return services;
         }
