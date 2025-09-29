@@ -201,8 +201,8 @@
 
 <script setup lang="ts">
 definePageMeta({
-  layout: 'default',
-  middleware: 'auth'
+  layout: 'default'
+  // middleware: 'auth' // Temporarily disabled for demo
 })
 
 const { getAccounts, createAccount, updateAccount, deleteAccount: deleteAccountApi } = useBudgetManager()

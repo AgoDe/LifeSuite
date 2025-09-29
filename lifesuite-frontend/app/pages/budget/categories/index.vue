@@ -222,8 +222,8 @@
 
 <script setup lang="ts">
 definePageMeta({
-  layout: 'default',
-  middleware: 'auth'
+  layout: 'default'
+  // middleware: 'auth' // Temporarily disabled for demo
 })
 
 const { getCategories, createCategory, updateCategory, deleteCategory: deleteCategoryApi } = useBudgetManager()
