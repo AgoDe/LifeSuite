@@ -338,7 +338,7 @@ const showSnackbar = (message: string, color: string = 'success') => {
 }
 
 const getAccountTypeIcon = (type: string) => {
-  const icons = {
+  const icons: Record<string, string> = {
     'Checking': 'mdi-bank',
     'Savings': 'mdi-piggy-bank',
     'Credit': 'mdi-credit-card',
@@ -349,7 +349,7 @@ const getAccountTypeIcon = (type: string) => {
 }
 
 const getAccountTypeColor = (type: string) => {
-  const colors = {
+  const colors: Record<string, string> = {
     'Checking': 'primary',
     'Savings': 'green',
     'Credit': 'orange',

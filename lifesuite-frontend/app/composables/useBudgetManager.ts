@@ -1,20 +1,36 @@
 import { useApi } from "./useApi"
+import type { 
+  AccountDto, 
+  CategoryDto, 
+  TransactionDto, 
+  RecurringDto,
+  TransactionFilter,
+  AccountFilter,
+  CategoryFilter,
+  RecurringFilter,
+  TransactionFormDto,
+  AccountFormDto,
+  CategoryFormDto,
+  RecurringFormDto,
+  SelectOption,
+  TransactionListItem
+} from "~/types/budget-manager"
 
 export const useBudgetManager = () => {
   const { apiCall } = useApi()
   
   // State for budget data
-  const accounts = ref<any[]>([])
-  const categories = ref<any[]>([])
-  const transactions = ref<any[]>([])
-  const recurring = ref<any[]>([])
+  const accounts = ref<AccountDto[]>([])
+  const categories = ref<CategoryDto[]>([])
+  const transactions = ref<TransactionDto[]>([])
+  const recurring = ref<RecurringDto[]>([])
   const loading = ref(false)
   
   // Accounts API
-  const getAccounts = async (filters: any = {}) => {
+  const getAccounts = async (filters: AccountFilter = {}) => {
     loading.value = true
     try {
-      const data = await apiCall<any[]>('budget-manager/accounts', {
+      const data = await apiCall<AccountDto[]>('budget-manager/accounts', {
         method: 'GET',
         query: filters
       })
@@ -27,7 +43,7 @@ export const useBudgetManager = () => {
 
   const getAccount = async (id: string) => {
     try {
-      return await apiCall<any>(`budget-manager/accounts/${id}`, {
+      return await apiCall<AccountDto>(`budget-manager/accounts/${id}`, {
         method: 'GET'
       })
     } catch (error) {
@@ -35,9 +51,9 @@ export const useBudgetManager = () => {
     }
   }
 
-  const createAccount = async (account: any) => {
+  const createAccount = async (account: AccountFormDto) => {
     try {
-      const newAccount = await apiCall<any>('budget-manager/accounts', {
+      const newAccount = await apiCall<AccountDto>('budget-manager/accounts', {
         method: 'POST',
         body: account
       })
@@ -49,14 +65,14 @@ export const useBudgetManager = () => {
     }
   }
 
-  const updateAccount = async (id: string, account: any) => {
+  const updateAccount = async (id: string, account: AccountFormDto) => {
     try {
-      const updatedAccount = await apiCall<any>(`budget-manager/accounts/${id}`, {
+      const updatedAccount = await apiCall<AccountDto>(`budget-manager/accounts/${id}`, {
         method: 'PUT',
         body: account
       })
       
-      const index = accounts.value.findIndex((a: any) => a.id === id)
+      const index = accounts.value.findIndex((a: AccountDto) => a.id === id)
       if (index !== -1) {
         accounts.value[index] = updatedAccount
       }
@@ -73,7 +89,7 @@ export const useBudgetManager = () => {
         method: 'DELETE'
       })
       
-      const index = accounts.value.findIndex((a: any) => a.id === id)
+      const index = accounts.value.findIndex((a: AccountDto) => a.id === id)
       if (index !== -1) {
         accounts.value.splice(index, 1)
       }
@@ -84,7 +100,7 @@ export const useBudgetManager = () => {
 
   const getAccountSelectOptions = async () => {
     try {
-      return await apiCall<any[]>('budget-manager/accounts/select-options', {
+      return await apiCall<SelectOption[]>('budget-manager/accounts/select-options', {
         method: 'GET'
       })
     } catch (error) {
@@ -93,10 +109,10 @@ export const useBudgetManager = () => {
   }
 
   // Categories API
-  const getCategories = async (filters: any = {}) => {
+  const getCategories = async (filters: CategoryFilter = {}) => {
     loading.value = true
     try {
-      const data = await apiCall<any[]>('budget-manager/categories', {
+      const data = await apiCall<CategoryDto[]>('budget-manager/categories', {
         method: 'GET',
         query: filters
       })
@@ -107,9 +123,9 @@ export const useBudgetManager = () => {
     }
   }
 
-  const createCategory = async (category: any) => {
+  const createCategory = async (category: CategoryFormDto) => {
     try {
-      const newCategory = await apiCall<any>('budget-manager/categories', {
+      const newCategory = await apiCall<CategoryDto>('budget-manager/categories', {
         method: 'POST',
         body: category
       })
@@ -121,14 +137,14 @@ export const useBudgetManager = () => {
     }
   }
 
-  const updateCategory = async (id: string, category: any) => {
+  const updateCategory = async (id: string, category: CategoryFormDto) => {
     try {
-      const updatedCategory = await apiCall<any>(`budget-manager/categories/${id}`, {
+      const updatedCategory = await apiCall<CategoryDto>(`budget-manager/categories/${id}`, {
         method: 'PUT',
         body: category
       })
       
-      const index = categories.value.findIndex((c: any) => c.id === id)
+      const index = categories.value.findIndex((c: CategoryDto) => c.id === id)
       if (index !== -1) {
         categories.value[index] = updatedCategory
       }
@@ -145,7 +161,7 @@ export const useBudgetManager = () => {
         method: 'DELETE'
       })
       
-      const index = categories.value.findIndex((c: any) => c.id === id)
+      const index = categories.value.findIndex((c: CategoryDto) => c.id === id)
       if (index !== -1) {
         categories.value.splice(index, 1)
       }
@@ -156,7 +172,7 @@ export const useBudgetManager = () => {
 
   const getCategorySelectOptions = async () => {
     try {
-      return await apiCall<any[]>('budget-manager/categories/select-options', {
+      return await apiCall<SelectOption[]>('budget-manager/categories/select-options', {
         method: 'GET'
       })
     } catch (error) {
@@ -165,10 +181,10 @@ export const useBudgetManager = () => {
   }
 
   // Transactions API
-  const getTransactions = async (filters: any = {}) => {
+  const getTransactions = async (filters: TransactionFilter = {}) => {
     loading.value = true
     try {
-      const data = await apiCall<any[]>('budget-manager/transactions', {
+      const data = await apiCall<TransactionDto[]>('budget-manager/transactions', {
         method: 'GET',
         query: filters
       })
@@ -179,10 +195,10 @@ export const useBudgetManager = () => {
     }
   }
 
-  const getTransactionsWithRecurrings = async (filters: any = {}) => {
+  const getTransactionsWithRecurrings = async (filters: TransactionFilter = {}) => {
     loading.value = true
     try {
-      const data = await apiCall<any>('budget-manager/transactions/with-active-recurrings', {
+      const data = await apiCall<TransactionDto[]>('budget-manager/transactions/with-active-recurrings', {
         method: 'GET',
         query: filters
       })
@@ -192,9 +208,9 @@ export const useBudgetManager = () => {
     }
   }
 
-  const createTransaction = async (transaction: any) => {
+  const createTransaction = async (transaction: TransactionFormDto) => {
     try {
-      const newTransaction = await apiCall<any>('budget-manager/transactions', {
+      const newTransaction = await apiCall<TransactionDto>('budget-manager/transactions', {
         method: 'POST',
         body: transaction
       })
@@ -206,14 +222,14 @@ export const useBudgetManager = () => {
     }
   }
 
-  const updateTransaction = async (id: string, transaction: any) => {
+  const updateTransaction = async (id: string, transaction: TransactionFormDto) => {
     try {
-      const updatedTransaction = await apiCall<any>(`budget-manager/transactions/${id}`, {
+      const updatedTransaction = await apiCall<TransactionDto>(`budget-manager/transactions/${id}`, {
         method: 'PUT',
         body: transaction
       })
       
-      const index = transactions.value.findIndex((t: any) => t.id === id)
+      const index = transactions.value.findIndex((t: TransactionDto) => t.id === id)
       if (index !== -1) {
         transactions.value[index] = updatedTransaction
       }
@@ -230,7 +246,7 @@ export const useBudgetManager = () => {
         method: 'DELETE'
       })
       
-      const index = transactions.value.findIndex((t: any) => t.id === id)
+      const index = transactions.value.findIndex((t: TransactionDto) => t.id === id)
       if (index !== -1) {
         transactions.value.splice(index, 1)
       }
@@ -240,10 +256,10 @@ export const useBudgetManager = () => {
   }
 
   // Recurring transactions API
-  const getRecurring = async (filters: any = {}) => {
+  const getRecurring = async (filters: RecurringFilter = {}) => {
     loading.value = true
     try {
-      const data = await apiCall<any[]>('budget-manager/recurring', {
+      const data = await apiCall<RecurringDto[]>('budget-manager/recurring', {
         method: 'GET',
         query: filters
       })
@@ -254,9 +270,9 @@ export const useBudgetManager = () => {
     }
   }
 
-  const createRecurring = async (recurringTransaction: any) => {
+  const createRecurring = async (recurringTransaction: RecurringFormDto) => {
     try {
-      const newRecurring = await apiCall<any>('budget-manager/recurring', {
+      const newRecurring = await apiCall<RecurringDto>('budget-manager/recurring', {
         method: 'POST',
         body: recurringTransaction
       })
@@ -268,14 +284,14 @@ export const useBudgetManager = () => {
     }
   }
 
-  const updateRecurring = async (id: string, recurringTransaction: any) => {
+  const updateRecurring = async (id: string, recurringTransaction: RecurringFormDto) => {
     try {
-      const updatedRecurring = await apiCall<any>(`budget-manager/recurring/${id}`, {
+      const updatedRecurring = await apiCall<RecurringDto>(`budget-manager/recurring/${id}`, {
         method: 'PUT',
         body: recurringTransaction
       })
       
-      const index = recurring.value.findIndex((r: any) => r.id === id)
+      const index = recurring.value.findIndex((r: RecurringDto) => r.id === id)
       if (index !== -1) {
         recurring.value[index] = updatedRecurring
       }
@@ -292,12 +308,91 @@ export const useBudgetManager = () => {
         method: 'DELETE'
       })
       
-      const index = recurring.value.findIndex((r: any) => r.id === id)
+      const index = recurring.value.findIndex((r: RecurringDto) => r.id === id)
       if (index !== -1) {
         recurring.value.splice(index, 1)
       }
     } catch (error) {
       throw new Error('Failed to delete recurring transaction')
+    }
+  }
+
+  // Utility method to combine transactions and recurring as unified list
+  const getCombinedTransactionList = async (filters: TransactionFilter = {}): Promise<TransactionListItem[]> => {
+    try {
+      loading.value = true
+      
+      // Get regular transactions
+      const transactionsData = await getTransactions(filters)
+      
+      // Get active recurring transactions for the same account/period
+      const recurringData = await getRecurring({ 
+        accountId: filters.accountId,
+        isActive: true 
+      })
+      
+      const combined: TransactionListItem[] = []
+      
+      // Add regular transactions
+      transactionsData.forEach(t => {
+        combined.push({
+          id: t.id,
+          description: t.description,
+          date: t.date,
+          type: t.type,
+          amount: t.amount,
+          status: t.status,
+          notes: t.notes,
+          category: t.category,
+          isRecurring: false,
+          isEstimated: t.isEstimated || false
+        })
+      })
+      
+      // Add recurring transactions as estimated future transactions
+      recurringData.forEach(r => {
+        // Calculate next occurrence(s) within the filter period
+        const today = new Date()
+        const activeFrom = new Date(r.activeFrom)
+        const activeTo = new Date(r.activeTo)
+        
+        if (today >= activeFrom && today <= activeTo) {
+          // Generate next occurrence
+          const nextDate = new Date(today.getFullYear(), today.getMonth(), r.chargeDay)
+          if (nextDate < today) {
+            nextDate.setMonth(nextDate.getMonth() + 1)
+          }
+          
+          if (nextDate <= activeTo) {
+            combined.push({
+              id: `recurring-${r.id}-${nextDate.getTime()}`,
+              description: `${r.description} (Ricorrente)`,
+              date: nextDate.toISOString(),
+              type: r.type,
+              amount: r.amount,
+              status: r.status || 2, // Estimated
+              notes: r.notes,
+              category: r.category,
+              isRecurring: true,
+              isEstimated: true,
+              recurringInfo: {
+                activeFrom: r.activeFrom,
+                activeTo: r.activeTo,
+                chargeDay: r.chargeDay,
+                isActive: r.isActive || true
+              }
+            })
+          }
+        }
+      })
+      
+      // Sort by date
+      combined.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      
+      return combined
+      
+    } finally {
+      loading.value = false
     }
   }
 
@@ -335,6 +430,9 @@ export const useBudgetManager = () => {
     getRecurring,
     createRecurring,
     updateRecurring,
-    deleteRecurring
+    deleteRecurring,
+    
+    // Combined methods
+    getCombinedTransactionList
   }
 }

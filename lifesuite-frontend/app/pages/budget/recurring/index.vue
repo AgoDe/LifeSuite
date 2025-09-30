@@ -403,13 +403,13 @@ const loadSelectOptions = async () => {
   }
 }
 
-const openRecurringDialog = (recurring = null) => {
+const openRecurringDialog = (recurring: any = null) => {
   editingRecurring.value = recurring
   if (recurring) {
     recurringForm.value = { 
       ...recurring,
-      startDate: recurring.startDate?.split('T')[0] || new Date().toISOString().split('T')[0],
-      endDate: recurring.endDate?.split('T')[0] || ''
+      startDate: recurring.activeFrom?.split('T')[0] || new Date().toISOString().split('T')[0],
+      endDate: recurring.activeTo?.split('T')[0] || ''
     }
   } else {
     recurringForm.value = {
@@ -457,7 +457,7 @@ const saveRecurring = async () => {
   }
 }
 
-const toggleRecurringStatus = async (recurring) => {
+const toggleRecurringStatus = async (recurring: any) => {
   try {
     const updatedRecurring = {
       ...recurring,
@@ -475,7 +475,7 @@ const toggleRecurringStatus = async (recurring) => {
   }
 }
 
-const confirmDelete = (recurring) => {
+const confirmDelete = (recurring: any) => {
   recurringToDelete.value = recurring
   deleteDialog.value = true
 }
