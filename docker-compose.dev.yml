@@ -15,5 +15,5 @@ services:
   budget-manager:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_URLS: http://+:80
+      ASPNETCORE_URLS: http://+:8080
     # Per .NET il hot reload è più complesso, per ora rebuild manuale

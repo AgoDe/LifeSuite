@@ -15,12 +15,15 @@ export default class AccountsController {
       method: 'GET',
       endpoint: '/accounts'
     })
+    logger.info(auth.user?.id.toString() || 'unknown', context)
 
     try {
       logger.info('🏦 Fetching user accounts from BudgetManager', context)
+      console.log('DEBUG: BUDGET_MANAGER_URL =', process.env.BUDGET_MANAGER_URL)
+      console.log('DEBUG: Full URL =', `${process.env.BUDGET_MANAGER_URL}/api/Account/user`)
 
       const result = await callMicroservice({
-        url: `${process.env.BUDGET_MANAGER_URL}/accounts/user`,
+        url: `${process.env.BUDGET_MANAGER_URL}/api/Account/user`,
         method: 'get',
         userId: userId!,
         params: request.qs(),

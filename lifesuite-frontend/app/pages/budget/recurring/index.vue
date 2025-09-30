@@ -518,7 +518,7 @@ const formatCurrency = (amount: number) => {
 }
 
 const getFrequencyLabel = (frequency: string) => {
-  const labels = {
+  const labels : Record<string, string> = {
     'Monthly': 'Mensile',
     'Weekly': 'Settimanale',
     'Yearly': 'Annuale'
@@ -527,7 +527,7 @@ const getFrequencyLabel = (frequency: string) => {
 }
 
 const getTransactionTypeLabel = (type: string) => {
-  const labels = {
+  const labels : Record<string, string> = {
     'Income': 'Entrata',
     'Expense': 'Uscita',
     'Transfer': 'Trasferimento'
@@ -536,7 +536,7 @@ const getTransactionTypeLabel = (type: string) => {
 }
 
 const getTransactionTypeColor = (type: string) => {
-  const colors = {
+  const colors : Record<string, string> = {
     'Income': 'green',
     'Expense': 'red',
     'Transfer': 'blue'
@@ -545,7 +545,7 @@ const getTransactionTypeColor = (type: string) => {
 }
 
 const getTransactionTypeIcon = (type: string) => {
-  const icons = {
+  const icons : Record<string, string> = {
     'Income': 'mdi-arrow-down',
     'Expense': 'mdi-arrow-up',
     'Transfer': 'mdi-swap-horizontal'
@@ -554,7 +554,7 @@ const getTransactionTypeIcon = (type: string) => {
 }
 
 const getAccountTypeIcon = (type: string) => {
-  const icons = {
+  const icons : Record<string, string> = {
     'Checking': 'mdi-bank',
     'Savings': 'mdi-piggy-bank',
     'Credit': 'mdi-credit-card',

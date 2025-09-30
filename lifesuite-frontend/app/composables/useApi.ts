@@ -9,13 +9,25 @@ export const useApi = () => {
     try {
       const fullUrl = `${baseURL}/api/${endpoint}`
       console.log('🚀 API Call:', fullUrl)
+      
+      // Prepara gli headers di base
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      }
+      
+      // Se abbiamo un token salvato, aggiungilo agli headers
+      if (process.client) {
+        const token = localStorage.getItem('auth_token')
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`
+        }
+      }
+      
       const response = await $fetch<T>(fullUrl, {
         ...options,
-        credentials: 'include', // Include automaticamente i cookie
-        headers: {
-          'Content-Type': 'application/json',
-          ...options.headers,
-        },
+        //credentials: 'include', // Include automaticamente i cookie
+        headers,
       })
       return response
     } catch (error) {

@@ -43,23 +43,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # Frontend Nuxt.js
-  frontend:
-    build:
-      context: ./lifesuite-frontend
-      dockerfile: Dockerfile
-    image: lifesuite/frontend:latest
-    container_name: lifesuite-frontend
-    ports:
-      - "3000:3000"
-    environment:
-      NODE_ENV: development
-      NUXT_PUBLIC_API_BASE_URL: http://localhost:3333/api
-    networks:
-      - lifesuite
-    depends_on:
-      - api-gateway
-    restart: unless-stopped
 
   # API Gateway
   api-gateway:
@@ -79,7 +62,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:-lifesuite123}
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      BUDGET_MANAGER_URL: http://budget-manager
+      BUDGET_MANAGER_URL: http://budget-manager:8080
       MEAL_PLANNER_URL: http://meal-planner
     networks:
       - lifesuite

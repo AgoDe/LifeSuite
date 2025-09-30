@@ -31,6 +31,11 @@ export const useAuth = () => {
       }
       
       // Il token verrà gestito automaticamente nei cookie HttpOnly
+      // Ma salviamo anche il token in localStorage per le chiamate con Bearer
+      if (process.client && response.token) {
+        localStorage.setItem('auth_token', response.token)
+      }
+      
       user.value = userData
       
       // Aspetta un tick per assicurarsi che lo stato sia aggiornato
@@ -65,6 +70,10 @@ export const useAuth = () => {
       console.warn('Logout API failed')
     } finally {
       user.value = null
+      // Rimuovi il token dal localStorage
+      if (process.client) {
+        localStorage.removeItem('auth_token')
+      }
       await router.push('/auth/login')
     }
   }
