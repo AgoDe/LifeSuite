@@ -126,6 +126,13 @@
               required
             />
 
+            <v-text-field
+              v-model="accountForm.institution"
+              label="Istituzione"
+              :rules="[v => !!v || 'Istituzione obbligatoria']"
+              required
+            />
+
             <v-textarea
               v-model="accountForm.description"
               label="Descrizione"
@@ -141,13 +148,14 @@
             />
 
             <v-text-field
-              v-model="accountForm.balance"
+              v-model="accountForm.initialBalance"
               label="Saldo Iniziale"
               type="number"
               step="0.01"
               prefix="€"
               :rules="[v => v !== null && v !== '' || 'Saldo obbligatorio']"
               required
+            />
             />
           </v-form>
         </v-card-text>
@@ -223,7 +231,8 @@ const accountForm = ref({
   name: '',
   description: '',
   type: '',
-  balance: 0
+  institution: '',
+  initialBalance: 0
 })
 
 // Account types
@@ -261,13 +270,20 @@ const loadAccounts = async () => {
 const openAccountDialog = (account: any = null) => {
   editingAccount.value = account
   if (account) {
-    accountForm.value = { ...account }
+    accountForm.value = { 
+      name: account.name || '',
+      description: account.description || '',
+      type: account.type || '',
+      institution: account.institution || '',
+      initialBalance: account.initialBalance || account.balance || 0
+    }
   } else {
     accountForm.value = {
       name: '',
       description: '',
       type: '',
-      balance: 0
+      institution: '',
+      initialBalance: 0
     }
   }
   accountDialog.value = true
@@ -280,7 +296,8 @@ const closeAccountDialog = () => {
     name: '',
     description: '',
     type: '',
-    balance: 0
+    institution: '',
+    initialBalance: 0
   }
 }
 
@@ -338,7 +355,7 @@ const showSnackbar = (message: string, color: string = 'success') => {
 }
 
 const getAccountTypeIcon = (type: string) => {
-  const icons = {
+  const icons: Record<string, string> = {
     'Checking': 'mdi-bank',
     'Savings': 'mdi-piggy-bank',
     'Credit': 'mdi-credit-card',
@@ -349,7 +366,7 @@ const getAccountTypeIcon = (type: string) => {
 }
 
 const getAccountTypeColor = (type: string) => {
-  const colors = {
+  const colors: Record<string, string> = {
     'Checking': 'primary',
     'Savings': 'green',
     'Credit': 'orange',

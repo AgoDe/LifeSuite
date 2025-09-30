@@ -179,7 +179,7 @@
             <v-row>
               <v-col cols="12" md="6">
                 <v-select
-                  v-model="recurringForm.transactionType"
+                  v-model="recurringForm.type"
                   :items="transactionTypes"
                   label="Tipo Transazione"
                   :rules="[v => !!v || 'Tipo obbligatorio']"
@@ -187,12 +187,9 @@
                 />
               </v-col>
               <v-col cols="12" md="6">
-                <v-select
-                  v-model="recurringForm.frequency"
-                  :items="frequencyOptions"
-                  label="Frequenza"
-                  :rules="[v => !!v || 'Frequenza obbligatoria']"
-                  required
+                <v-text-field
+                  v-model="recurringForm.institution"
+                  label="Istituzione (opzionale)"
                 />
               </v-col>
             </v-row>
@@ -219,7 +216,7 @@
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field
-                  v-model="recurringForm.startDate"
+                  v-model="recurringForm.activeFrom"
                   label="Data Inizio"
                   type="date"
                   :rules="[v => !!v || 'Data inizio obbligatoria']"
@@ -228,7 +225,7 @@
               </v-col>
               <v-col cols="12" md="6">
                 <v-text-field
-                  v-model="recurringForm.endDate"
+                  v-model="recurringForm.activeTo"
                   label="Data Fine (opzionale)"
                   type="date"
                 />
@@ -238,7 +235,7 @@
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field
-                  v-model="recurringForm.dayOfMonth"
+                  v-model="recurringForm.chargeDay"
                   label="Giorno del Mese"
                   type="number"
                   min="1"
@@ -247,11 +244,7 @@
                 />
               </v-col>
               <v-col cols="12" md="6">
-                <v-switch
-                  v-model="recurringForm.isActive"
-                  label="Attiva"
-                  color="primary"
-                />
+                <!-- Empty for layout consistency -->
               </v-col>
             </v-row>
 
@@ -342,15 +335,14 @@ const formValid = ref(false)
 const recurringForm = ref({
   description: '',
   amount: 0,
-  transactionType: '',
-  frequency: '',
+  type: '', // Changed from transactionType to type
   accountId: '',
   categoryId: '',
-  startDate: new Date().toISOString().split('T')[0],
-  endDate: '',
-  dayOfMonth: 1,
-  isActive: true,
-  notes: ''
+  activeFrom: new Date().toISOString().split('T')[0] || '', // Changed from startDate
+  activeTo: '', // Changed from endDate
+  chargeDay: 1, // Changed from dayOfMonth
+  notes: '',
+  institution: ''
 })
 
 // Transaction types
@@ -403,27 +395,33 @@ const loadSelectOptions = async () => {
   }
 }
 
-const openRecurringDialog = (recurring = null) => {
+const openRecurringDialog = (recurring: any = null) => {
   editingRecurring.value = recurring
   if (recurring) {
     recurringForm.value = { 
-      ...recurring,
-      startDate: recurring.startDate?.split('T')[0] || new Date().toISOString().split('T')[0],
-      endDate: recurring.endDate?.split('T')[0] || ''
+      description: recurring.description || '',
+      amount: recurring.amount || 0,
+      type: recurring.type || '',
+      accountId: recurring.account?.id || '',
+      categoryId: recurring.category?.id || '',
+      activeFrom: (recurring.activeFrom?.split('T')[0] || new Date().toISOString().split('T')[0]) || '',
+      activeTo: recurring.activeTo?.split('T')[0] || '',
+      chargeDay: recurring.chargeDay || 1,
+      notes: recurring.notes || '',
+      institution: recurring.institution || ''
     }
   } else {
     recurringForm.value = {
       description: '',
       amount: 0,
-      transactionType: '',
-      frequency: '',
+      type: '',
       accountId: '',
       categoryId: '',
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: '',
-      dayOfMonth: 1,
-      isActive: true,
-      notes: ''
+      activeFrom: new Date().toISOString().split('T')[0] || '',
+      activeTo: '',
+      chargeDay: 1,
+      notes: '',
+      institution: ''
     }
   }
   recurringDialog.value = true
@@ -457,7 +455,7 @@ const saveRecurring = async () => {
   }
 }
 
-const toggleRecurringStatus = async (recurring) => {
+const toggleRecurringStatus = async (recurring: any) => {
   try {
     const updatedRecurring = {
       ...recurring,
@@ -475,7 +473,7 @@ const toggleRecurringStatus = async (recurring) => {
   }
 }
 
-const confirmDelete = (recurring) => {
+const confirmDelete = (recurring: any) => {
   recurringToDelete.value = recurring
   deleteDialog.value = true
 }

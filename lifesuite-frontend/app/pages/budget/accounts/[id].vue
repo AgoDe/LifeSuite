@@ -22,11 +22,11 @@
           
           <div class="d-flex align-center mb-2">
             <v-icon
-              :color="getAccountTypeColor(account?.type)"
+              :color="getAccountTypeColor(account?.type || '')"
               size="32"
               class="mr-3"
             >
-              {{ getAccountTypeIcon(account?.type) }}
+              {{ getAccountTypeIcon(account?.type || '') }}
             </v-icon>
             <div>
               <h2 class="text-h4">{{ account?.name }}</h2>
@@ -41,7 +41,7 @@
             {{ formatCurrency(account?.balance || 0) }}
           </div>
           <v-chip
-            :color="getAccountTypeColor(account?.type)"
+            :color="getAccountTypeColor(account?.type || '')"
             variant="tonal"
           >
             {{ account?.type }}
@@ -159,14 +159,14 @@
       <!-- Transactions Table -->
       <v-card>
         <v-card-title>
-          Transazioni
+          Transazioni e Ricorrenze
           <v-spacer />
-          <span class="text-caption">{{ transactions.length }} transazioni</span>
+          <span class="text-caption">{{ transactionList.length }} elementi</span>
         </v-card-title>
         
         <v-data-table
           :headers="headers"
-          :items="transactions"
+          :items="transactionList"
           :loading="transactionsLoading"
           class="elevation-0"
           items-per-page="15"
@@ -198,6 +198,19 @@
             </div>
           </template>
 
+          <template v-slot:item.status="{ item }">
+            <v-chip
+              :color="getTransactionStatusColor(item.status)"
+              size="small"
+              variant="tonal"
+            >
+              <v-icon size="small" class="mr-1">
+                {{ getTransactionStatusIcon(item.status) }}
+              </v-icon>
+              {{ getTransactionStatusLabel(item.status) }}
+            </v-chip>
+          </template>
+
           <template v-slot:item.category="{ item }">
             <div v-if="item.category" class="d-flex align-center">
               <v-icon 
@@ -212,8 +225,31 @@
             <span v-else class="text-medium-emphasis">Nessuna categoria</span>
           </template>
 
+          <template v-slot:item.isRecurring="{ item }">
+            <v-chip
+              v-if="item.isRecurring"
+              color="purple"
+              size="small"
+              variant="tonal"
+            >
+              <v-icon size="small" class="mr-1">mdi-repeat</v-icon>
+              Ricorrente
+            </v-chip>
+            <v-chip
+              v-else-if="item.isEstimated"
+              color="orange"
+              size="small"
+              variant="tonal"
+            >
+              <v-icon size="small" class="mr-1">mdi-calculator</v-icon>
+              Stimato
+            </v-chip>
+            <span v-else class="text-medium-emphasis">Normale</span>
+          </template>
+
           <template v-slot:item.actions="{ item }">
             <v-btn
+              v-if="!item.isRecurring"
               variant="text"
               color="secondary"
               icon="mdi-pencil"
@@ -221,12 +257,25 @@
               @click="openTransactionDialog(item)"
             />
             <v-btn
+              v-if="!item.isRecurring"
               variant="text"
               color="error"
               icon="mdi-delete"
               size="small"
               @click="confirmDeleteTransaction(item)"
             />
+            <v-tooltip v-else text="Gestisci nella sezione Ricorrenze">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  variant="text"
+                  color="purple"
+                  icon="mdi-open-in-new"
+                  size="small"
+                  @click="$router.push('/budget/recurring')"
+                />
+              </template>
+            </v-tooltip>
           </template>
 
           <template v-slot:no-data>
@@ -420,6 +469,14 @@
 </template>
 
 <script setup lang="ts">
+import type { 
+  AccountDto, 
+  TransactionListItem, 
+  TransactionFilter, 
+  TransactionFormDto,
+  SelectOption
+} from '~/types/budget-manager'
+
 definePageMeta({
   layout: 'default',
   middleware: 'auth'
@@ -430,26 +487,40 @@ const accountId = route.params.id as string
 
 const { 
   getAccount,
-  getTransactions,
-  getTransactionsWithRecurrings,
+  getCombinedTransactionList,
   createTransaction,
   updateTransaction,
   deleteTransaction: deleteTransactionApi,
   getCategorySelectOptions
 } = useBudgetManager()
 
+const {
+  formatDate,
+  formatCurrency,
+  getAmountColor,
+  getTransactionTypeColor,
+  getTransactionTypeIcon,
+  getTransactionTypeLabel,
+  getTransactionStatusColor,
+  getTransactionStatusIcon,
+  getTransactionStatusLabel,
+  getAccountTypeIcon,
+  getAccountTypeColor,
+  getPeriodLabel,
+  getTransactionTypeSelectOptions
+} = useBudgetUtils()
+
 // Reactive state
-const account = ref<any>(null)
-const transactions = ref<any[]>([])
-const forecast = ref<any[]>([])
-const categoryOptions = ref<any[]>([])
+const account = ref<AccountDto | null>(null)
+const transactionList = ref<TransactionListItem[]>([])
+const categoryOptions = ref<SelectOption[]>([])
 const loading = ref(false)
 const transactionsLoading = ref(false)
 const transactionDialog = ref(false)
 const advancedFiltersDialog = ref(false)
 const deleteDialog = ref(false)
-const editingTransaction = ref<any>(null)
-const transactionToDelete = ref<any>(null)
+const editingTransaction = ref<TransactionListItem | null>(null)
+const transactionToDelete = ref<TransactionListItem | null>(null)
 const submitting = ref(false)
 const deleting = ref(false)
 const formValid = ref(false)
@@ -458,7 +529,7 @@ const formValid = ref(false)
 const selectedPeriod = ref('current_month')
 
 // Advanced filters
-const advancedFilters = ref({
+const advancedFilters = ref<TransactionFilter>({
   dateFrom: '',
   dateTo: '',
   amountMin: null,
@@ -468,14 +539,15 @@ const advancedFilters = ref({
 })
 
 // Form data
-const transactionForm = ref({
+const transactionForm = ref<TransactionFormDto>({
   description: '',
   amount: 0,
   type: '',
-  date: new Date().toISOString().split('T')[0],
+  date: new Date().toISOString().split('T')[0] || '',
   accountId: accountId,
   categoryId: '',
-  notes: ''
+  notes: '',
+  status: 4 // Charged
 })
 
 // Period options
@@ -489,11 +561,7 @@ const periodOptions = [
 ]
 
 // Transaction types
-const transactionTypes = [
-  { title: 'Entrata', value: 'Income' },
-  { title: 'Uscita', value: 'Expense' },
-  { title: 'Trasferimento', value: 'Transfer' }
-]
+const transactionTypes = getTransactionTypeSelectOptions()
 
 // Table headers
 const headers = [
@@ -501,7 +569,9 @@ const headers = [
   { title: 'Descrizione', key: 'description', sortable: true },
   { title: 'Importo', key: 'amount', sortable: true },
   { title: 'Tipo', key: 'type', sortable: true },
+  { title: 'Stato', key: 'status', sortable: true },
   { title: 'Categoria', key: 'category', sortable: false },
+  { title: 'Ricorrente', key: 'isRecurring', sortable: true },
   { title: 'Azioni', key: 'actions', sortable: false }
 ]
 
@@ -514,31 +584,31 @@ const snackbar = ref({
 
 // Computed statistics
 const statistics = computed(() => {
-  const income = transactions.value
-    .filter(t => t.type === 'Income')
+  const income = transactionList.value
+    .filter(t => !t.isEstimated && (t.type === 'Income' || t.type === 1))
     .reduce((sum, t) => sum + t.amount, 0)
   
-  const expenses = transactions.value
-    .filter(t => t.type === 'Expense')
+  const expenses = transactionList.value
+    .filter(t => !t.isEstimated && (t.type === 'Expense' || t.type === 2))
     .reduce((sum, t) => sum + t.amount, 0)
   
   return {
     totalIncome: income,
     totalExpenses: expenses,
     netAmount: income - expenses,
-    incomeCount: transactions.value.filter(t => t.type === 'Income').length,
-    expenseCount: transactions.value.filter(t => t.type === 'Expense').length
+    incomeCount: transactionList.value.filter(t => !t.isEstimated && (t.type === 'Income' || t.type === 1)).length,
+    expenseCount: transactionList.value.filter(t => !t.isEstimated && (t.type === 'Expense' || t.type === 2)).length
   }
 })
 
 // Computed forecast statistics
 const forecastStats = computed(() => {
-  const expectedIncome = forecast.value
-    .filter(t => t.type === 'Income')
+  const expectedIncome = transactionList.value
+    .filter(t => t.isEstimated && (t.type === 'Income' || t.type === 1))
     .reduce((sum, t) => sum + t.amount, 0)
   
-  const expectedExpenses = forecast.value
-    .filter(t => t.type === 'Expense')
+  const expectedExpenses = transactionList.value
+    .filter(t => t.isEstimated && (t.type === 'Expense' || t.type === 2))
     .reduce((sum, t) => sum + t.amount, 0)
   
   return {
@@ -546,6 +616,11 @@ const forecastStats = computed(() => {
     expectedExpenses,
     expectedNet: expectedIncome - expectedExpenses
   }
+})
+
+// Computed forecast list
+const forecast = computed(() => {
+  return transactionList.value.filter(t => t.isEstimated)
 })
 
 // Methods
@@ -566,16 +641,10 @@ const loadTransactions = async () => {
     transactionsLoading.value = true
     const filters = buildFilters()
     
-    // Load both regular transactions and forecast if applicable
-    const [transactionsData, forecastData] = await Promise.all([
-      getTransactions(filters),
-      selectedPeriod.value.includes('next') || selectedPeriod.value === 'current_month'
-        ? getTransactionsWithRecurrings(filters)
-        : Promise.resolve([])
-    ])
+    // Use the new combined method to get both transactions and recurring
+    const combinedData = await getCombinedTransactionList(filters)
+    transactionList.value = combinedData
     
-    transactions.value = transactionsData
-    forecast.value = forecastData.filter ? forecastData.filter(t => t.isEstimated) : []
   } catch (error) {
     showSnackbar('Errore nel caricamento delle transazioni', 'error')
   } finally {
@@ -592,8 +661,8 @@ const loadCategoryOptions = async () => {
   }
 }
 
-const buildFilters = () => {
-  const filters: any = {
+const buildFilters = (): TransactionFilter => {
+  const filters: TransactionFilter = {
     accountId: accountId
   }
   
@@ -666,23 +735,29 @@ const clearAdvancedFilters = () => {
   }
 }
 
-const openTransactionDialog = (transaction: any = null) => {
+const openTransactionDialog = (transaction: TransactionListItem | null = null) => {
   editingTransaction.value = transaction
-  if (transaction) {
+  if (transaction && !transaction.isRecurring) {
     transactionForm.value = { 
-      ...transaction,
-      date: transaction.date?.split('T')[0] || new Date().toISOString().split('T')[0],
-      accountId: accountId
+      description: transaction.description,
+      amount: transaction.amount,
+      type: String(transaction.type),
+      date: (transaction.date?.split('T')[0] || new Date().toISOString().split('T')[0]) || '',
+      accountId: accountId,
+      categoryId: transaction.category?.id || '',
+      notes: transaction.notes || '',
+      status: typeof transaction.status === 'number' ? transaction.status : 4
     }
   } else {
     transactionForm.value = {
       description: '',
       amount: 0,
       type: '',
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split('T')[0] || '',
       accountId: accountId,
       categoryId: '',
-      notes: ''
+      notes: '',
+      status: 4 // Charged
     }
   }
   transactionDialog.value = true
@@ -699,7 +774,7 @@ const saveTransaction = async () => {
   try {
     submitting.value = true
     
-    if (editingTransaction.value) {
+    if (editingTransaction.value && !editingTransaction.value.isRecurring) {
       await updateTransaction(editingTransaction.value.id, transactionForm.value)
       showSnackbar('Transazione aggiornata con successo', 'success')
     } else {
@@ -716,13 +791,19 @@ const saveTransaction = async () => {
   }
 }
 
-const confirmDeleteTransaction = (transaction: any) => {
+const confirmDeleteTransaction = (transaction: TransactionListItem) => {
+  // Only allow deletion of regular transactions, not recurring templates
+  if (transaction.isRecurring) {
+    showSnackbar('Impossibile eliminare una ricorrenza da qui. Gestiscila dalla sezione Ricorrenze.', 'warning')
+    return
+  }
+  
   transactionToDelete.value = transaction
   deleteDialog.value = true
 }
 
 const deleteTransactionHandler = async () => {
-  if (!transactionToDelete.value) return
+  if (!transactionToDelete.value || transactionToDelete.value.isRecurring) return
 
   try {
     deleting.value = true
@@ -746,83 +827,9 @@ const showSnackbar = (message: string, color: string = 'success') => {
   }
 }
 
-// Helper functions
-const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString('it-IT')
-}
-
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('it-IT', {
-    style: 'currency',
-    currency: 'EUR'
-  }).format(amount)
-}
-
-const getAmountColor = (type: string, amount: number) => {
-  if (type === 'Income') return 'green'
-  if (type === 'Expense') return 'red'
-  return 'blue'
-}
-
-const getTransactionTypeLabel = (type: string) => {
-  const labels: Record<string, string> = {
-    'Income': 'Entrata',
-    'Expense': 'Uscita',
-    'Transfer': 'Trasferimento'
-  }
-  return labels[type] || type
-}
-
-const getTransactionTypeColor = (type: string) => {
-  const colors: Record<string, string> = {
-    'Income': 'green',
-    'Expense': 'red',
-    'Transfer': 'blue'
-  }
-  return colors[type] || 'primary'
-}
-
-const getTransactionTypeIcon = (type: string) => {
-  const icons: Record<string, string> = {
-    'Income': 'mdi-arrow-down',
-    'Expense': 'mdi-arrow-up',
-    'Transfer': 'mdi-swap-horizontal'
-  }
-  return icons[type] || 'mdi-swap-horizontal'
-}
-
-const getAccountTypeIcon = (type: string) => {
-  const icons: Record<string, string> = {
-    'Checking': 'mdi-bank',
-    'Savings': 'mdi-piggy-bank',
-    'Credit': 'mdi-credit-card',
-    'Investment': 'mdi-trending-up',
-    'Cash': 'mdi-cash'
-  }
-  return icons[type] || 'mdi-bank'
-}
-
-const getAccountTypeColor = (type: string) => {
-  const colors: Record<string, string> = {
-    'Checking': 'primary',
-    'Savings': 'green',
-    'Credit': 'orange',
-    'Investment': 'blue',
-    'Cash': 'teal'
-  }
-  return colors[type] || 'primary'
-}
-
+// Month label helper
 const getMonthLabel = (period: string) => {
-  const labels: Record<string, string> = {
-    'current_month': 'Mese Corrente',
-    'last_month': 'Mese Precedente',
-    'next_month': 'Mese Successivo',
-    'last_3_months': 'Ultimi 3 Mesi',
-    'current_year': 'Anno Corrente',
-    'all': 'Tutto'
-  }
-  return labels[period] || period
+  return getPeriodLabel(period)
 }
 
 // Lifecycle

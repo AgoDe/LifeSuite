@@ -388,7 +388,7 @@ const showSnackbar = (message: string, color: string = 'success') => {
 }
 
 const getTransactionTypeLabel = (type: string) => {
-  const labels = {
+  const labels: Record<string, string> = {
     'Income': 'Entrata',
     'Expense': 'Uscita',
     'Transfer': 'Trasferimento'
@@ -397,7 +397,7 @@ const getTransactionTypeLabel = (type: string) => {
 }
 
 const getTransactionTypeColor = (type: string) => {
-  const colors = {
+  const colors: Record<string, string> = {
     'Income': 'green',
     'Expense': 'red',
     'Transfer': 'blue'

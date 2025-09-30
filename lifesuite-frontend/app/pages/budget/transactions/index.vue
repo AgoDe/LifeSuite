@@ -402,10 +402,11 @@ const transactionForm = ref({
   description: '',
   amount: 0,
   type: '',
-  date: new Date().toISOString().split('T')[0],
+  date: new Date().toISOString().split('T')[0] || '',
   accountId: '',
   categoryId: '',
-  notes: ''
+  notes: '',
+  status: 4 // Charged by default
 })
 
 // Table headers
@@ -553,17 +554,19 @@ const openTransactionDialog = (transaction: any = null) => {
   if (transaction) {
     transactionForm.value = { 
       ...transaction,
-      date: transaction.date?.split('T')[0] || new Date().toISOString().split('T')[0]
+      date: (transaction.date?.split('T')[0] || new Date().toISOString().split('T')[0]) || '',
+      status: transaction.status || 4
     }
   } else {
     transactionForm.value = {
       description: '',
       amount: 0,
       type: '',
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split('T')[0] || '',
       accountId: '',
       categoryId: '',
-      notes: ''
+      notes: '',
+      status: 4
     }
   }
   transactionDialog.value = true
