@@ -22,11 +22,11 @@
           
           <div class="d-flex align-center mb-2">
             <v-icon
-              :color="getAccountTypeColor(account?.type)"
+              :color="getAccountTypeColor(account?.type || '')"
               size="32"
               class="mr-3"
             >
-              {{ getAccountTypeIcon(account?.type) }}
+              {{ getAccountTypeIcon(account?.type || '') }}
             </v-icon>
             <div>
               <h2 class="text-h4">{{ account?.name }}</h2>
@@ -41,7 +41,7 @@
             {{ formatCurrency(account?.balance || 0) }}
           </div>
           <v-chip
-            :color="getAccountTypeColor(account?.type)"
+            :color="getAccountTypeColor(account?.type || '')"
             variant="tonal"
           >
             {{ account?.type }}
@@ -543,7 +543,7 @@ const transactionForm = ref<TransactionFormDto>({
   description: '',
   amount: 0,
   type: '',
-  date: new Date().toISOString().split('T')[0],
+  date: new Date().toISOString().split('T')[0] || '',
   accountId: accountId,
   categoryId: '',
   notes: '',
@@ -742,7 +742,7 @@ const openTransactionDialog = (transaction: TransactionListItem | null = null) =
       description: transaction.description,
       amount: transaction.amount,
       type: String(transaction.type),
-      date: transaction.date?.split('T')[0] || new Date().toISOString().split('T')[0],
+      date: (transaction.date?.split('T')[0] || new Date().toISOString().split('T')[0]) || '',
       accountId: accountId,
       categoryId: transaction.category?.id || '',
       notes: transaction.notes || '',
@@ -753,7 +753,7 @@ const openTransactionDialog = (transaction: TransactionListItem | null = null) =
       description: '',
       amount: 0,
       type: '',
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split('T')[0] || '',
       accountId: accountId,
       categoryId: '',
       notes: '',
