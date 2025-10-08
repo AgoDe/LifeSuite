@@ -1,4 +1,9 @@
 export default defineNuxtConfig({
+  // Estende i layers
+  extends: [
+    './layers/budget-manager'
+  ],
+
   // App metadata
   app: {
     head: {

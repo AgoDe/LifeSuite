@@ -37,12 +37,6 @@
       >
         <v-card class="h-100">
           <v-card-title class="d-flex align-center">
-            <v-icon
-              :color="getAccountTypeColor(account.type)"
-              class="mr-2"
-            >
-              {{ getAccountTypeIcon(account.type) }}
-            </v-icon>
             {{ account.name }}
           </v-card-title>
           
@@ -55,7 +49,7 @@
               {{ formatCurrency(account.balance) }}
             </div>
             <v-chip
-              :color="getAccountTypeColor(account.type)"
+              color="primary"
               size="small"
               variant="tonal"
             >
@@ -122,14 +116,14 @@
             <v-text-field
               v-model="accountForm.name"
               label="Nome Account"
-              :rules="[v => !!v || 'Nome obbligatorio']"
+              :rules="[(v: any) => !!v || 'Nome obbligatorio']"
               required
             />
 
             <v-text-field
               v-model="accountForm.institution"
               label="Istituzione"
-              :rules="[v => !!v || 'Istituzione obbligatoria']"
+              :rules="[(v : string | null) => !!v || 'Istituzione obbligatoria']"
               required
             />
 
@@ -143,7 +137,7 @@
               v-model="accountForm.type"
               :items="accountTypes"
               label="Tipo Account"
-              :rules="[v => !!v || 'Tipo obbligatorio']"
+              :rules="[(v: string | null) => !!v || 'Tipo obbligatorio']"
               required
             />
 
@@ -153,7 +147,7 @@
               type="number"
               step="0.01"
               prefix="€"
-              :rules="[v => v !== null && v !== '' || 'Saldo obbligatorio']"
+              :rules="[(v: string | null) => v !== null && v !== '' || 'Saldo obbligatorio']"
               required
             />
             />
@@ -208,6 +202,7 @@
 </template>
 
 <script setup lang="ts">
+
 definePageMeta({
   layout: 'default'
   // middleware: 'auth' // Temporarily disabled for demo
@@ -216,12 +211,12 @@ definePageMeta({
 const { getAccounts, createAccount, updateAccount, deleteAccount: deleteAccountApi } = useBudgetManager()
 
 // Reactive state
-const accounts = ref<any[]>([])
+const accounts = ref<AccountDto[]>([])
 const loading = ref(false)
 const accountDialog = ref(false)
 const deleteDialog = ref(false)
-const editingAccount = ref<any>(null)
-const accountToDelete = ref<any>(null)
+const editingAccount = ref<AccountDto | null>(null)
+const accountToDelete = ref<AccountDto | null>(null)
 const submitting = ref(false)
 const deleting = ref(false)
 const formValid = ref(false)
@@ -365,16 +360,16 @@ const getAccountTypeIcon = (type: string) => {
   return icons[type] || 'mdi-bank'
 }
 
-const getAccountTypeColor = (type: string) => {
-  const colors: Record<string, string> = {
-    'Checking': 'primary',
-    'Savings': 'green',
-    'Credit': 'orange',
-    'Investment': 'blue',
-    'Cash': 'teal'
-  }
-  return colors[type] || 'primary'
-}
+// const getAccountTypeColor = (type: string) => {
+//   const colors: Record<string, string> = {
+//     'Checking': 'primary',
+//     'Savings': 'green',
+//     'Credit': 'orange',
+//     'Investment': 'blue',
+//     'Cash': 'teal'
+//   }
+//   return colors[type] || 'primary'
+// }
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('it-IT', {

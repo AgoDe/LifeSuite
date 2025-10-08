@@ -1,0 +1,235 @@
+// Budget Manager Layer Styles
+// ===========================
+
+// Variabili specifiche per Budget Manager
+$budget-primary: #2E7D32; // Verde per entrate
+$budget-secondary: #D32F2F; // Rosso per uscite
+$budget-neutral: #757575; // Grigio per trasferimenti
+$budget-background: #F8F9FA;
+$budget-border: #E0E0E0;
+
+// Layout Budget Manager
+.budget-container {
+  padding: 1rem;
+  background-color: $budget-background;
+  min-height: 100vh;
+}
+
+// Componenti Account
+.budget-account-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid $budget-primary;
+
+  .account-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+
+  .account-balance {
+    font-size: 1.5rem;
+    font-weight: 700;
+    
+    &.positive {
+      color: $budget-primary;
+    }
+    
+    &.negative {
+      color: $budget-secondary;
+    }
+  }
+
+  .account-institution {
+    color: #666;
+    font-size: 0.9rem;
+  }
+}
+
+// Componenti Transaction
+.budget-transaction-list {
+  .transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid $budget-border;
+    background: white;
+    
+    &:hover {
+      background-color: #F5F5F5;
+    }
+
+    .transaction-info {
+      flex: 1;
+      
+      .transaction-description {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+      }
+      
+      .transaction-date {
+        color: #666;
+        font-size: 0.85rem;
+      }
+    }
+
+    .transaction-amount {
+      font-weight: 600;
+      font-size: 1.1rem;
+      
+      &.income {
+        color: $budget-primary;
+      }
+      
+      &.expense {
+        color: $budget-secondary;
+      }
+      
+      &.transfer {
+        color: $budget-neutral;
+      }
+    }
+  }
+}
+
+// Componenti Category
+.budget-category-chip {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background-color: #E3F2FD;
+  color: #1976D2;
+  border: 1px solid #BBDEFB;
+}
+
+// Forms Budget Manager
+.budget-form {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid $budget-border;
+    border-radius: 4px;
+    font-size: 1rem;
+
+    &:focus {
+      outline: none;
+      border-color: $budget-primary;
+      box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+    }
+  }
+
+  .form-select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid $budget-border;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: white;
+
+    &:focus {
+      outline: none;
+      border-color: $budget-primary;
+    }
+  }
+}
+
+// Buttons Budget Manager
+.budget-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &.primary {
+    background-color: $budget-primary;
+    color: white;
+
+    &:hover {
+      background-color: darken($budget-primary, 10%);
+    }
+  }
+
+  &.secondary {
+    background-color: $budget-secondary;
+    color: white;
+
+    &:hover {
+      background-color: darken($budget-secondary, 10%);
+    }
+  }
+
+  &.outline {
+    background-color: transparent;
+    border: 2px solid $budget-primary;
+    color: $budget-primary;
+
+    &:hover {
+      background-color: $budget-primary;
+      color: white;
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .budget-container {
+    padding: 0.5rem;
+  }
+
+  .budget-account-card {
+    padding: 1rem;
+  }
+
+  .budget-transaction-list .transaction-item {
+    flex-direction: column;
+    align-items: flex-start;
+    
+    .transaction-amount {
+      margin-top: 0.5rem;
+      align-self: flex-end;
+    }
+  }
+}
+
+// Utilities Budget Manager
+.text-income {
+  color: $budget-primary !important;
+}
+
+.text-expense {
+  color: $budget-secondary !important;
+}
+
+.text-transfer {
+  color: $budget-neutral !important;
+}
+
+.bg-budget {
+  background-color: $budget-background !important;
+}
